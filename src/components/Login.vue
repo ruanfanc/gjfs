@@ -7,7 +7,7 @@
 				<img src="../assets/logo.png">
 			</div>
 			<!-- 登录表单 -->
-			<el-form :model="loginForm" :rules="loginFormRules" label-width="0px" class="login_form">
+			<el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-width="0px" class="login_form">
 				<el-form-item prop="username">
 					<el-input v-model="loginForm.username" prefix-icon="el-icon-user"></el-input>
 				</el-form-item>
@@ -15,7 +15,7 @@
 					<el-input v-model="loginForm.password" prefix-icon="el-icon-lock" type="password"></el-input>
 				</el-form-item>
 				<el-form-item class="btns" >
-					<el-button type="primary">登录</el-button>
+					<el-button type="primary" @click="login">登录</el-button>
 					<el-button type="info">注册</el-button>
 				</el-form-item>
 			</el-form>
@@ -41,7 +41,25 @@
 				]
 			}
 		}
-	}
+		},
+		methods: {
+			login() {
+				this.$refs.loginFormRef.validate(async valid =>{
+					if (!valid) return;
+					/* 配置请求路径，对接口 */
+					//const {data: res} = await this.$http.post('login',this.loginForm)
+					//console.log(res);
+					/* 配置状态码 */
+					//if(res.meta.status !==200) return this.$message.error('用户名或密码错误！');
+					this.$message.success('登录成功！');
+					//将返回的token保存到客户端的sessionStorage中
+					//window.sessionStorage.setItem("token",res.data.token);
+					//页面跳转 
+					this.$router.push("/home");
+				} );
+			}
+		}
+	
 }
 </script>
 <!--  -->
