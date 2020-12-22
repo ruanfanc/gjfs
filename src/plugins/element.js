@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { Button, Form, FormItem, Input ,Message, Container, Header, Aside, Main, Menu, Submenu,
  MenuItemGroup, MenuItem, Breadcrumb, BreadcrumbItem, Card, Dialog,Row, Col,
- TimePicker,Option,Select} from 'element-ui'
+ TimePicker,Option,Select,InputNumber,Checkbox,Table,TableColumn,Tooltip,Tabs,TabPane,Pagination} from 'element-ui'
 
 Vue.use(Button)
 Vue.use(Form)
@@ -24,7 +24,12 @@ Vue.use(Col)
 Vue.use(TimePicker)
 Vue.use(Option)
 Vue.use(Select)
+Vue.use(InputNumber)
+Vue.use(Checkbox)
+Vue.use(TableColumn)
+Vue.use(Table)
+Vue.use(Tooltip)
+Vue.use(Tabs)
+Vue.use(TabPane)
+Vue.use(Pagination)
 Vue.prototype.$message = Message
-
-/* Col,Input,
- TimePicker,Option,Select */

@@ -4,7 +4,7 @@
 		<el-breadcrumb separator-class="el-icon-arrow-right">
 		  <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
 		  <el-breadcrumb-item>工作台</el-breadcrumb-item>
-		  <el-breadcrumb-item>选项1</el-breadcrumb-item>
+		  <el-breadcrumb-item>接处警</el-breadcrumb-item>
 		</el-breadcrumb>
 		<!-- 卡片 -->
 		<div  class="text-item" >接警民警</div>
@@ -26,7 +26,7 @@
 		  </div>
 		</el-card>
 		<!-- 表单对话框 -->
-		<el-dialog title="接警登记表" :visible.sync="dialogVisible" width="75%">
+		<el-dialog title="接警登记表" :visible.sync="dialogVisible" width="70%">
 		  <span>
 			
 			      <el-row :gutter="20">
@@ -124,9 +124,7 @@
 			 
 		  </span>
 		  <!-- 底部-->
-		  <span slot="footer" class="dialog-footer">
-		   
-		  </span>
+		 
 		</el-dialog>
 	</div>
 </template>

@@ -5,14 +5,18 @@ import './plugins/element.js'
 import './assets/css/global.css'
 
 import axios from 'axios'
-//请求根路径
-axios.default.baseURL = ''
-axios.interceptors.request.use(config => {
-	config.headers.Authorization = window.sessionStorage.getItem('token')
+
+
+
+/* axios.interceptors.request.use(config => {
+	config.headers.Authorization = wsindow.sessionStorage.getItem('token')
 	return config
-})
+}) */
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
+
+//请求根路径
+/* axios.defaults.baseURL = '/api3' */
 
 new Vue({
   router,

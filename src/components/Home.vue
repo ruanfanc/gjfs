@@ -6,7 +6,7 @@
 			  <img src="" alt="" />
 			  <span>公检法司管理系统</span>
 		  </div>
-		  <el-button type="info" @click="logout">退出</el-button>
+		  <el-button type="info" @click="logout" size="mini" round>退出</el-button>
 	  </el-header>
 	  <!-- 主体-->
 	  <el-container>
@@ -33,23 +33,22 @@
 			          <span>工作台</span>
 			        </template>
 			        <el-menu-item-group>
-			          <template slot="title" >分组一</template>
-			          <el-menu-item index="/work" @click = "saveNavState('/work')" >选项1</el-menu-item>
-			          <el-menu-item index="2-2">选项2</el-menu-item>
+						<el-menu-item index="2-2">待办任务</el-menu-item>
+			            <el-menu-item index="/work" @click = "saveNavState('/work')" >接处警</el-menu-item>
+						<el-menu-item index="2-4">案件办理</el-menu-item>
+						<el-menu-item index="2-2">案件管理</el-menu-item>
 			        </el-menu-item-group>
-			        <el-menu-item-group title="分组2">
-			          <el-menu-item index="2-3">选项3</el-menu-item>
-			        </el-menu-item-group>
-			        <el-submenu index="2-4">
-			          <template slot="title">选项4</template>
-			          <el-menu-item index="2-4-1">选项1</el-menu-item>
-			        </el-submenu>
 			      </el-submenu>
 			     
-			      <el-menu-item index="3" disabled>
-			        <i class="el-icon-document"></i>
-			        <span slot="title">导航三</span>
-			      </el-menu-item>
+			      <el-submenu index="3">
+			        <template slot="title">
+			          <i class="el-icon-search"></i>
+			          <span>查询</span>
+			        </template>
+			        <el-menu-item-group>
+			      		<el-menu-item index="/reporter">报警记录</el-menu-item>
+			        </el-menu-item-group>
+			      </el-submenu>
 			      <el-menu-item index="4">
 			        <i class="el-icon-setting"></i>
 			        <span slot="title">导航四</span>
