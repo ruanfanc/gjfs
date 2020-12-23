@@ -1,8 +1,11 @@
 import Vue from 'vue'
 import { Button, Form, FormItem, Input ,Message, Container, Header, Aside, Main, Menu, Submenu,
  MenuItemGroup, MenuItem, Breadcrumb, BreadcrumbItem, Card, Dialog,Row, Col,
- TimePicker,Option,Select,InputNumber,Checkbox,Table,TableColumn,Tooltip,Tabs,TabPane,Pagination} from 'element-ui'
+ TimePicker,Option,Select,InputNumber,Checkbox,Table,TableColumn,Tooltip
+ ,Tabs,TabPane,Pagination,Carousel,CarouselItem} from 'element-ui'
 
+Vue.use(CarouselItem)
+Vue.use(Carousel)
 Vue.use(Button)
 Vue.use(Form)
 Vue.use(FormItem)

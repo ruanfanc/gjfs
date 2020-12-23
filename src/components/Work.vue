@@ -17,12 +17,12 @@
 		<div  class="text-item" >大队长审核</div>
 		<el-card class="box-card">
 		  <div >
-		      <el-button type="primary">受案登记表</el-button>
-			  <el-button type="primary">基本案情表</el-button>
-			  <el-button type="primary">笔录证据</el-button>
-			  <el-button type="primary">侦查终结表</el-button>
-			  <el-button type="primary">起诉报告书</el-button>
-			  <el-button type="primary">传唤笔录表</el-button>
+		      <el-button type="primary" disabled>受案登记表</el-button>
+			  <el-button type="primary" disabled>基本案情表</el-button>
+			  <el-button type="primary" disabled>笔录证据</el-button>
+			  <el-button type="primary" disabled>侦查终结表</el-button>
+			  <el-button type="primary" disabled>起诉报告书</el-button>
+			  <el-button type="primary" disabled>传唤笔录表</el-button>
 		  </div>
 		</el-card>
 		<!-- 表单对话框 -->

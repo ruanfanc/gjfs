@@ -6,6 +6,8 @@ import Home from '../components/Home.vue'
 import Welcome from '../components/Welcom.vue'
 import Work from '../components/Work.vue'
 import Reporter from '../components/search/Reporter.vue'
+import People from '../components/search/People.vue'
+import Captain from '../components/task/Captain.vue'
 
 Vue.use(VueRouter)
 
@@ -30,6 +32,12 @@ const routes = [
 	  },
 	  {
 		  path:'/reporter', component: Reporter
+	  },
+	  {
+		  path:'/people', component: People
+	  },
+	  {
+		  path:'/captain', component: Captain
 	  }]
 	  }
 ]

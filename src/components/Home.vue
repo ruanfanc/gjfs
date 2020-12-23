@@ -33,10 +33,10 @@
 			          <span>工作台</span>
 			        </template>
 			        <el-menu-item-group>
-						<el-menu-item index="2-2">待办任务</el-menu-item>
+						<el-menu-item index="/captain">待办任务</el-menu-item>
 			            <el-menu-item index="/work" @click = "saveNavState('/work')" >接处警</el-menu-item>
-						<el-menu-item index="2-4">案件办理</el-menu-item>
-						<el-menu-item index="2-2">案件管理</el-menu-item>
+						<el-menu-item index="2-4" disabled>案件办理</el-menu-item>
+						<el-menu-item index="2-2" disabled>案件管理</el-menu-item>
 			        </el-menu-item-group>
 			      </el-submenu>
 			     
@@ -47,11 +47,12 @@
 			        </template>
 			        <el-menu-item-group>
 			      		<el-menu-item index="/reporter">报警记录</el-menu-item>
+						<el-menu-item index="/people">警员信息</el-menu-item>
 			        </el-menu-item-group>
 			      </el-submenu>
-			      <el-menu-item index="4">
+			      <el-menu-item index="4" disabled>
 			        <i class="el-icon-setting"></i>
-			        <span slot="title">导航四</span>
+			        <span slot="title" >导航四</span>
 			      </el-menu-item>
 			    </el-menu>
 		</el-aside>
