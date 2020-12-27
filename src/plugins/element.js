@@ -35,4 +35,5 @@ Vue.use(Tooltip)
 Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Pagination)
+
 Vue.prototype.$message = Message

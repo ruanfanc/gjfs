@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="mainbox">
 		<!-- 面包屑导航 -->
 		<el-breadcrumb separator-class="el-icon-arrow-right">
 		  <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
@@ -12,6 +12,7 @@
 			
 		  <div>
 		      <el-button type="primary"  @click="dialogVisible = true">接警登记</el-button>
+					<el-button type="primary"  @click="dialogEvidence = true">证据上传</el-button>
 		  </div>
 		</el-card>
 		<div  class="text-item" >大队长审核</div>
@@ -25,10 +26,9 @@
 			  <el-button type="primary" disabled>传唤笔录表</el-button>
 		  </div>
 		</el-card>
-		<!-- 表单对话框 -->
+		<!-- 接警表单对话框 -->
 		<el-dialog title="接警登记表" :visible.sync="dialogVisible" width="70%">
 		  <span>
-			
 			      <el-row :gutter="20">
 			        <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="84px"
 			          label-position="left">
@@ -123,8 +123,28 @@
 			      </el-row>
 			 
 		  </span>
-		  <!-- 底部-->
-		 
+		</el-dialog>
+		<!-- 证据上传表单对话框 -->
+		<el-dialog title="证据上传" :visible.sync="dialogEvidence" width="70%">
+			<!-- 表单 -->
+			<el-form ref="evidenceForm" :model="evidenceData" :rules="rulesevi" size="medium" label-width="100px">
+			  <el-form-item label="证据类型" prop="evidenceType">
+			    <el-input v-model="evidenceData.evidenceType" placeholder="请输入证据类型" clearable :style="{width: '100%'}">
+			    </el-input>
+			  </el-form-item>
+			  <el-form-item label="证据描述" prop="evidenceDescription">
+			    <el-input v-model="evidenceData.evidenceDescription" type="textarea" placeholder="请输入证据基本描述"
+			      :autosize="{minRows: 4, maxRows: 4}" :style="{width: '100%'}"></el-input>
+			  </el-form-item>
+			  <el-form-item label="案件单号" prop="acceptedCaseRegisterId">
+			    <el-input v-model="evidenceData.acceptedCaseRegisterId" placeholder="请输入对应案件单号" clearable :style="{width: '100%'}">
+			    </el-input>
+			  </el-form-item>
+			</el-form>
+			<div slot="footer">
+			  <el-button @click="closeevi">取消</el-button>
+			  <el-button type="primary" @click="handelEvi">确定</el-button>
+			</div>
 		</el-dialog>
 	</div>
 </template>
@@ -137,7 +157,8 @@
 			return {
 				//对话框隐藏
 				dialogVisible: false,
-			 formData: {
+				dialogEvidence: false,
+				formData: {
 			        field105: undefined,
 			        field108: undefined,
 			        field109: null,
@@ -238,6 +259,29 @@
 			        "label": "其他",
 			        "value": ""
 			      }],
+				  evidenceData: {
+				      evidenceType: '',
+				      evidenceDescription:'',
+				      acceptedCaseRegisterId: '',
+				    },
+				    rulesevi: {
+				      evidenceType: [{
+				        required: true,
+				        message: '请输入证据类型',
+				        trigger: 'blur'
+				      }],
+				      evidenceDescription: [{
+				        required: true,
+				        message: '请输入证据基本描述',
+				        trigger: 'blur'
+				      }],
+				      acceptedCaseRegisterId: [{
+				        required: true,
+				        message: '请输入对应案件单号',
+				        trigger: 'blur'
+				      }],
+				    },
+				  
 			    }
 			  },
 			  computed: {},
@@ -254,6 +298,15 @@
 	    resetForm() {
 	      this.$refs['elForm'].resetFields()
 	    },
+		handelEvi(){
+			this.$refs['evidenceForm'].validate(async valid => {
+			  if (!valid) return
+			  // TODO 提交表单
+			  await this.$http.post('/api2/police/officePolice/PostEvidence',this.evidenceData)
+			  this.dialogEvidence = false
+			  return this.$message.success('上传成功，等待大队长审核')
+			})
+		}
 	  }
 	}
 </script>
@@ -261,7 +314,10 @@
 <style>
 	.text-item {
 		padding: 15px;
-		
 		color: gray
 	}
+	.mainbox {
+		padding: 20px;
+	}
 </style>
+

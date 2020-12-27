@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="mainbox">
 	<el-tabs v-model="activeName" @tab-click="handleClick">
 	    <el-tab-pane label="待审核" name="first">
 			<div  class="text-item" >证据审核</div>
@@ -13,7 +13,7 @@
 								<!-- eslint-disable -->
 								<template slot-scope="scope">
 									<el-tooltip  effect="dark" content="查看证据" placement="top" :enterable="false">
-										<el-button type="primary" icon="el-icon-view" size="mini" @click="dialogVisible1 = true"></el-button>
+										<el-button type="primary" icon="el-icon-view" size="mini" @click="lookevidence"></el-button>
 									</el-tooltip>
 									<el-tooltip  effect="dark" content="证据上链" placement="top" :enterable="false">
 										<el-button type="info" icon="el-icon-upload" size="mini" @click="dialogVisible2 = true"></el-button>
@@ -48,7 +48,7 @@
 		 </el-table>
 	</span>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible1 = false">取 消</el-button>
+      <el-button @click="openFullScreen1" type="success"    v-loading.fullscreen.lock="fullscreenLoading">安全性检查</el-button>
       <el-button type="primary" @click="dialogVisible1 = false">确 定</el-button>
     </span>
   </el-dialog>
@@ -62,8 +62,8 @@
   		是否将物证上传至区块链网络？
   	</span>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible2 = false">取 消</el-button>
-      <el-button type="primary" @click="dialogVisible2 = false">确 定</el-button>
+      <el-button @click="dialogVisible2 = false">取消</el-button>
+      <el-button type="primary" @click="uploadevi">确 定</el-button>
     </span>
   </el-dialog>
   
@@ -74,28 +74,10 @@
 	export default {
 		data() {
 			return {
+				fullscreenLoading: false,
 				activeName: 'first',
 				nocheck: [],
-				evidence:[
-                        {
-                            "evidenceId"					: 1,
-                            "evidenceType"					: "指纹",
-                            "updateTime"					: "2020-12-19 13:30:04",
-                            "evidenceFilePath"				: "https://police-hnu.oss-cn-beijing.aliyuncs.com/5a528699-bb4e-4b55-8310-8b3a43f35261",
-                            "evidenceDescription"			: "嫌疑人指纹",
-                            "writtenDecisionOfCasFilingId"	: null,
-                            "acceptedCaseRegisterId"		: 23213137
-                        },
-                        {
-                            "evidenceId"					: 2,
-                            "evidenceType"					: "血迹",
-                            "updateTime"					: "2020-12-19 12:32:12",
-                            "evidenceFilePath"				: "",
-                            "evidenceDescription"			: "受害人血迹",
-                            "writtenDecisionOfCasFilingId"	: null,
-                            "acceptedCaseRegisterId"		: 23213137
-                        }
-                    ],
+				evidence:[],
 				dialogVisible1: false,
 				dialogVisible2: false,
 				
@@ -121,15 +103,36 @@
 		            done();
 		          })
 		          .catch(_ => {});
-		      }
+		      },
+		async openFullScreen1() {
+		  this.fullscreenLoading = true;
+		        setTimeout(() => {
+		          this.fullscreenLoading = false;
+		        }, 2000);
+				const { data: res} = await this.$http.get('/api5/scc/insert/get/2')
+				console.log(res)
+				if (res.ok) return this.$message.success('比对成功！') 
+				return this.$message.error("证据描述被篡改！请联系管理员")
+				 },
+		/* 查看证据弹窗 */
+		async lookevidence () {
+			this.dialogVisible1 = true
+			const { data: res} = await this.$http.get('/api4/evidence/getEvidence')
+			this.evidence = res
+				
+		
 	},
-	}
+	/* 确定上传 */
+		uploadevi () {
+			this.dialogVisible2 = false
+			this.$message.success("上传成功！")
+	},
+	}}
 </script>
 
 <style>
 .text-item {
 	padding: 15px;
-		
 	color: gray
 	}
 .el-table{

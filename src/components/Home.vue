@@ -8,56 +8,52 @@
 		  </div>
 		  <el-button type="info" @click="logout" size="mini" round>退出</el-button>
 	  </el-header>
-	  <!-- 主体-->
+		<!-- 主体 -->
 	  <el-container>
-		  <!-- 侧边栏-->
-	    <el-aside :width="isCollapse ? '64px' : '200px'">
-			<div class="toggle-button" @click="toggleCollapse">|||</div>
-			<!-- 菜单 -->
-			  <el-menu
-			      background-color="#333744"
-			      text-color="#fff"
-			      active-text-color="#ffd04b"
-				  unique-opened
-				  :collapse="isCollapse"
-				  :collapse-transition="false"
-				  router
-				  :default-active="activePath">
-				  <el-menu-item index="/home">
-				    <i class="el-icon-s-home"></i>
-				    <span slot="title">首页</span>
-				  </el-menu-item>
-			      <el-submenu index="2">
-			        <template slot="title">
-			          <i class="el-icon-menu"></i>
-			          <span>工作台</span>
-			        </template>
-			        <el-menu-item-group>
-						<el-menu-item index="/captain">待办任务</el-menu-item>
-			            <el-menu-item index="/work" @click = "saveNavState('/work')" >接处警</el-menu-item>
-						<el-menu-item index="2-4" disabled>案件办理</el-menu-item>
-						<el-menu-item index="2-2" disabled>案件管理</el-menu-item>
-			        </el-menu-item-group>
-			      </el-submenu>
-			     
-			      <el-submenu index="3">
-			        <template slot="title">
-			          <i class="el-icon-search"></i>
-			          <span>查询</span>
-			        </template>
-			        <el-menu-item-group>
-			      		<el-menu-item index="/reporter">报警记录</el-menu-item>
-						<el-menu-item index="/people">警员信息</el-menu-item>
-			        </el-menu-item-group>
-			      </el-submenu>
-			      <el-menu-item index="4" disabled>
-			        <i class="el-icon-setting"></i>
-			        <span slot="title" >导航四</span>
-			      </el-menu-item>
-			    </el-menu>
-		</el-aside>
-		<!-- 右侧主体 -->
+		
 	    <el-main>
+			<el-menu
+			 mode="horizontal"
+			    background-color=" #fff"
+			    text-color="#666666"
+			    active-text-color="#003366"
+							  unique-opened
+							  :collapse="isCollapse"
+							  :collapse-transition="false"
+							  router
+							  :default-active="activePath">
+							  <el-menu-item index="/home">
+							    <i class="el-icon-s-home"></i>
+							    <span slot="title">首页</span>
+							  </el-menu-item>
+			    <el-submenu index="2">
+			      <template slot="title">
+			        <i class="el-icon-menu"></i>
+			        <span>工作台</span>
+			      </template>
+			      <el-menu-item-group>
+									<el-menu-item index="/work" @click = "saveNavState('/work')" >接处警</el-menu-item>
+									<el-menu-item index="/captain">待办任务</el-menu-item>
+									<el-menu-item index="2-4" disabled>案件办理</el-menu-item>
+									<el-menu-item index="2-2" disabled>案件管理</el-menu-item>
+			      </el-menu-item-group>
+			    </el-submenu>
+			   
+			    <el-submenu index="3">
+			      <template slot="title">
+			        <i class="el-icon-search"></i>
+			        <span>查询</span>
+			      </template>
+			      <el-menu-item-group>
+			    		<el-menu-item index="/reporter">报警记录</el-menu-item>
+									<el-menu-item index="/people">警员信息</el-menu-item>
+			      </el-menu-item-group>
+			    </el-submenu>
+			    <el-menu-item index="4" disabled>
+			      <i class="el-icon-setting"></i>
+			      <span slot="title" >导航四</span>
+			    </el-menu-item>
+			  </el-menu>
 			<router-view></router-view>
 		</el-main>
 	  </el-container>
@@ -94,7 +90,7 @@ export default {
 
 <style lang="less" scoped>
 .el-header {
-	background-color: #373d41;
+	background-color: #003366;
 	display: flex;
 	justify-content: space-between;
 	padding-left:0 ;
@@ -107,14 +103,14 @@ export default {
 		margin-left: 15px;
 	}
 }
-.el-aside {
-	background-color: #333744;
-	.el-menu {
-		border-right: none;
-	}
-}
+
 .el-main {
 	background-color: #eaedf1;
+	padding: 0px;
+	.el-menu {
+		font-size: 16px ;
+		font-weight: 700;
+	}
 }
 .toggle-button {
 	background-color: #4A5064;

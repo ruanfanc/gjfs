@@ -1,31 +1,92 @@
 <template>
-		  <el-carousel height="155px" direction="vertical" :autoplay="false">
-		    <el-carousel-item :key="1">
-		      <img src="../assets/banner-1.jpg"  class="img">
-		    </el-carousel-item>
-		  </el-carousel>
+	<div class="mainset">
+		<el-row class="elrow">
+			<el-col>
+				<el-carousel height="155px" :autoplay="false">
+					<el-carousel-item>
+						<img src="../assets/banner-1.jpg"  >
+					</el-carousel-item>
+					<el-carousel-item>
+						<img src="../assets/banner2.jpg"  >
+					</el-carousel-item	 >		
+				</el-carousel>
+			</el-col>
+		</el-row>
+		<el-row>
+			<el-col>
+				<el-carousel height="60px" :autoplay="false" indicator-position="none">
+					<el-carousel-item >
+						<img src="../assets/biaoyu.jpg" />
+					</el-carousel-item>
+				</el-carousel>
+			</el-col>
+		</el-row>
+		<div class="cardcontainer">
+			<el-row gutter="20">
+				 <el-col :span="8">
+					 <el-card class="boxcard">
+						 
+					 </el-card>
+				 </el-col>
+				 <el-col :span="8">
+				 				 <el-card class="boxcard">
+				 					 
+				 				 </el-card>
+				 </el-col>
+				 <el-col :span="8">
+				 				 <el-card class="boxcard">
+				 					 
+				 				 </el-card>
+				 </el-col>
+			</el-row>
+			<el-row gutter="20">
+				 <el-col :span="8">
+					 <el-card class="boxcard">
+						 
+					 </el-card>
+				 </el-col>
+				 <el-col :span="16">
+				 				 <el-card class="boxcard">
+				 					 
+				 				 </el-card>
+				 </el-col>
+				
+			</el-row>
+		</div>
+		
+	</div>
+	
+		 
 
 </template>
-<style>
-	.img{
-		width:auto;
-		height:auto;
-		max-width: 100%;
-		
+<style scoped>
+	
+	.el-row {
+		margin-left: 0px;
+		 margin-bottom: 20px;
+		    &:last-child {
+		      margin-bottom: 0;
+		    }
 	}
-	 .el-carousel__item h3 {
-	    color: #475669;
-	    font-size: 14px;
-	    opacity: 0.75;
-	    line-height: 200px;
-	    margin: 0;
+
+  
+	 .el-carousel__item img {
+	    height: 100%;
+	    width: 100%;
+	    position: relative;
 	  }
-	  
-	  .el-carousel__item:nth-child(2n) {
-	    background-color: #99a9bf;
+	  .img {
+		  height: 100%;
+		  width: 100%;
+		  position: absolute;
+		  
 	  }
-	  
-	  .el-carousel__item:nth-child(2n+1) {
-	    background-color: #d3dce6;
-	  }
+	
+	 .cardcontainer {
+		 margin: 30px;
+	 }
+	 .boxcard {
+	 		  height: 160px;
+			  cursor:pointer
+	 }
 </style>

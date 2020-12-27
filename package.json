@@ -1,5 +1,5 @@
 {
-  "name": "ui",
+  "name": "happy",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -28,11 +28,25 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.2.2",
-    "less": "^4.0.0",
+    "less": "^3.9.0",
     "less-loader": "^7.1.0",
     "vue-cli-plugin-element": "^1.0.1",
     "vue-template-compiler": "^2.6.11",
-	"less": "^3.9.0",
-	"less-loder": "^4.1.0"
-  }
+    "less-loder": "^4.1.0"
+  },
+  "description": "## Project setup ``` npm install ```",
+  "main": ".eslintrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/niexiaolan/element-ui.git"
+  },
+  "keywords": [
+    "34"
+  ],
+  "author": "nxl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/niexiaolan/element-ui/issues"
+  },
+  "homepage": "https://github.com/niexiaolan/element-ui#readme"
 }

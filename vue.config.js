@@ -30,7 +30,28 @@ module.exports = {
 			    pathRewrite: {
 			        '^/api3': ''
 			    }
-			}
-        }
-    }
+			},
+			'/api4': {
+			    // 此处的写法，目的是为了 将 /api 替换成 https://www.baidu.com/
+			    target: 'http://59.110.164.222:8080/ifp',
+			    // 允许跨域
+			    changeOrigin: true,
+			    ws: true,
+			    pathRewrite: {
+			        '^/api4': ''
+			    }
+			},
+			'/api5': {
+			    // 此处的写法，目的是为了 将 /api 替换成 https://www.baidu.com/
+			    target: 'http://isihon.cn',
+			    // 允许跨域
+			    changeOrigin: true,
+			    ws: true,
+			    pathRewrite: {
+			        '^/api5': ''
+			    }
+			},
+        },
+	//assetsPublicPath: './',
+	}
 }
