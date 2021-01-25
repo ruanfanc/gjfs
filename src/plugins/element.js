@@ -1,9 +1,15 @@
 import Vue from 'vue'
 import { Button, Form, FormItem, Input ,Message, Container, Header, Aside, Main, Menu, Submenu,
  MenuItemGroup, MenuItem, Breadcrumb, BreadcrumbItem, Card, Dialog,Row, Col,
- TimePicker,Option,Select,InputNumber,Checkbox,Table,TableColumn,Tooltip
- ,Tabs,TabPane,Pagination,Carousel,CarouselItem} from 'element-ui'
+ TimePicker,Option,Select,InputNumber,Checkbox,CheckboxGroup,Table,TableColumn,Tooltip
+ ,Tabs,TabPane,Pagination,Carousel,CarouselItem,RadioGroup,Radio,MessageBox,Timeline,TimelineItem,Divider,Upload} from 'element-ui'
 
+Vue.use(Upload)
+Vue.use(Divider)
+Vue.use(TimelineItem)
+Vue.use(Timeline)
+Vue.use(RadioGroup)
+Vue.use(Radio)
 Vue.use(CarouselItem)
 Vue.use(Carousel)
 Vue.use(Button)
@@ -29,6 +35,7 @@ Vue.use(Option)
 Vue.use(Select)
 Vue.use(InputNumber)
 Vue.use(Checkbox)
+Vue.use(CheckboxGroup)
 Vue.use(TableColumn)
 Vue.use(Table)
 Vue.use(Tooltip)
@@ -37,3 +44,7 @@ Vue.use(TabPane)
 Vue.use(Pagination)
 
 Vue.prototype.$message = Message
+Vue.prototype.$msgbox = MessageBox
+Vue.prototype.$alert = MessageBox.alert
+Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$prompt = MessageBox.prompt

@@ -8,8 +8,8 @@
 			</div>
 			<!-- 登录表单 -->
 			<el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-width="0px" class="login_form">
-				<el-form-item prop="username">
-					<el-input v-model="loginForm.username" prefix-icon="el-icon-user"></el-input>
+				<el-form-item prop="staffId">
+					<el-input v-model="loginForm.staffId" prefix-icon="el-icon-user"></el-input>
 				</el-form-item>
 				<el-form-item prop="password">
 					<el-input v-model="loginForm.password" prefix-icon="el-icon-lock" type="password"></el-input>
@@ -28,12 +28,12 @@
 		data() {
 			return {
 				loginForm: {
-					username:'',
+					staffId:'',
 					password:''
 				},
 				//验证规则
 				loginFormRules: {
-				username: [
+				staffId: [
 					{ required: true, message:"请输入用户名", trigger: "blur"}
 				],
 				password: [
@@ -47,15 +47,16 @@
 				this.$refs.loginFormRef.validate(async valid =>{
 					if (!valid) return;
 					/* 配置请求路径，对接口 */
-					//const {data: res} = await this.$http.post('login',this.loginForm)
-					//console.log(res);
+					const {data: res} = await this.$http.post('/api1/login/logins',this.loginForm)
+					console.log(res);
 					/* 配置状态码 */
-					//if(res.meta.status !==200) return this.$message.error('用户名或密码错误！');
+					if(res.code !==0) return this.$message.error('用户名或密码错误！');
 					this.$message.success('登录成功！');
 					//将返回的token保存到客户端的sessionStorage中
+					window.sessionStorage.setItem("token",res.data.token);
 					//window.sessionStorage.setItem("token",res.data.token);
 					//页面跳转 
-					this.$router.push("/home");
+					this.$router.push("/welcome");
 				} );
 			}
 		}
@@ -63,7 +64,7 @@
 }
 </script>
 <!--  -->
-<style lang="less" scoped>
+<style scoped>
 	.login_container {
 		background-color: #2b4b6b;
 		height: 100%;

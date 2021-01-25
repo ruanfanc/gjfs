@@ -1,9 +1,10 @@
 module.exports = {
+	lintOnSave: false,
     devServer: {
         proxy: {
             '/api1': {
                 // 此处的写法，目的是为了 将 /api 替换成 https://www.baidu.com/
-                target: 'http://sihon.vip/accepter',
+                target: 'http://isihon.cn/sc',
                 // 允许跨域
                 changeOrigin: true,
                 ws: true,
@@ -51,7 +52,32 @@ module.exports = {
 			        '^/api5': ''
 			    }
 			},
+			'/api6': {
+			    // 此处的写法，目的是为了 将 /api 替换成 https://www.baidu.com/
+			    target: 'http://192.168.66.104:8082',
+			    // 允许跨域
+			    changeOrigin: true,
+			    ws: true,
+			    pathRewrite: {
+			        '^/api6': ''
+			    }
+			},
+			'/api7': {
+			    // 此处的写法，目的是为了 将 /api 替换成 https://www.baidu.com/
+			    target: 'https://tpl.bjinternetcourt.gov.cn',
+			    // 允许跨域
+			    changeOrigin: true,
+			    ws: true,
+			    pathRewrite: {
+			        '^/api7': ''
+			    }
+			},
         },
 	//assetsPublicPath: './',
-	}
+	
+	},
+	  transpileDependencies: [
+	    'vue-echarts',
+	    'resize-detector'
+	  ]
 }

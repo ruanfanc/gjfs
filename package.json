@@ -2,22 +2,31 @@
   "name": "happy",
   "version": "0.1.0",
   "private": true,
+  "description": "## Project setup ``` npm install ```",
+  "author": "nxl",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
+  "main": ".eslintrc.js",
   "dependencies": {
     "axios": "^0.21.0",
     "core-js": "^3.6.5",
+    "echarts": "^5.0.0",
     "element-ui": "^2.4.5",
+    "file-saver": "^2.0.5",
     "vue": "^2.6.11",
-    "vue-router": "^3.2.0"
+    "vue-echarts": "^5.0.0-beta.0",
+    "vue-router": "^3.2.0",
+    "vuex": "^3.6.0",
+    "xlsx": "^0.16.9"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-vuex": "^4.5.9",
     "@vue/cli-service": "~4.5.0",
     "@vue/eslint-config-standard": "^5.1.2",
     "babel-eslint": "^10.1.0",
@@ -28,25 +37,22 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.2.2",
-    "less": "^3.9.0",
+    "less": "^3.13.1",
     "less-loader": "^7.1.0",
+    "less-loder": "^4.1.0",
     "vue-cli-plugin-element": "^1.0.1",
-    "vue-template-compiler": "^2.6.11",
-    "less-loder": "^4.1.0"
+    "vue-template-compiler": "^2.6.11"
   },
-  "description": "## Project setup ``` npm install ```",
-  "main": ".eslintrc.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/niexiaolan/element-ui.git"
-  },
-  "keywords": [
-    "34"
-  ],
-  "author": "nxl",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/niexiaolan/element-ui/issues"
   },
-  "homepage": "https://github.com/niexiaolan/element-ui#readme"
+  "homepage": "https://github.com/niexiaolan/element-ui#readme",
+  "keywords": [
+    "34"
+  ],
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/niexiaolan/element-ui.git"
+  }
 }

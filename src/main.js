@@ -5,6 +5,7 @@ import './plugins/element.js'
 import './assets/css/global.css'
 
 import axios from 'axios'
+import store from './store'
 
 
 
@@ -15,10 +16,12 @@ import axios from 'axios'
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
 
+
 //请求根路径
-/* axios.defaults.baseURL = '/api3' */
+//axios.defaults.baseURL = 'http://isihon.cn/sc'
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')
