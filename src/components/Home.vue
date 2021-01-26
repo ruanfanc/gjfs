@@ -71,9 +71,11 @@
 		//	this.activePath = window.sessionStorage.getItem('activePath')
 		},
 		methods: {
-			logout() {
+			async logout() {
 				window.sessionStorage.clear();
-				this.$router.push("/login");
+			        const {data: res1} = await this.$http.post('/api1/login/logout',this.loginForm)
+			        console.log(res1);
+							this.$router.push("/login");
 			},
 			//菜单折叠
 			toggleCollapse() {
