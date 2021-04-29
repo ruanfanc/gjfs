@@ -13,6 +13,7 @@ import Leader from '../components/task/Leader.vue'
 import Publicity from '../components/Publicity.vue'
 import Checkout from '../components/Checkout.vue'
 import Case from '../components/task/Case.vue'
+import NoRight from '../components/noRight/noRight.vue'
 
 Vue.use(VueRouter)
 
@@ -67,6 +68,10 @@ const routes = [
 			{
 				path: '/case',
 				component: Case
+			},
+			{
+				path:'/noRight',
+				component:NoRight
 			}
 		]
 	}
