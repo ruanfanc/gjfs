@@ -16,14 +16,14 @@
 				</template>
 			</el-table-column>
 
-			<el-table-column label="操作" width="150">
+			<el-table-column label="操作" width="250">
 				<!-- eslint-disable -->
 				<template slot-scope="{row}">
 					<el-tooltip effect="dark" content="查看证据" placement="top" :enterable="false">
-						<el-button type="primary" icon="el-icon-view" size="mini" @click="lookevidence(row.caseId)"></el-button>
+						<el-button type="primary"  size="mini" @click="lookevidence(row.caseId)">查看证据</el-button>
 					</el-tooltip>
 					<el-tooltip effect="dark" content="上传证据" placement="top" :enterable="false">
-						<el-button type="success" icon="el-icon-upload" size="mini" @click="dialogupload(row.caseId)"></el-button>
+						<el-button type="success"  size="mini" @click="dialogupload(row.caseId)">上传证据</el-button>
 					</el-tooltip>
 				</template>
 			</el-table-column>
