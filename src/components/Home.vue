@@ -73,7 +73,7 @@
 		methods: {
 			async logout() {
 				window.sessionStorage.clear();
-			        const {data: res1} = await this.$http.post('/api1/login/logout',this.loginForm)
+			        const {data: res1} = await this.$http.get('/api1/login/logout')
 			        console.log(res1);
 							this.$router.push("/login");
 			},
