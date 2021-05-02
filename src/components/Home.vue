@@ -21,7 +21,11 @@
           <i class="el-icon-s-home"></i>
           <span slot="title">首页</span>
         </el-menu-item>
-        <el-submenu index="2">
+        <el-menu-item index="/case">
+          <i class="el-icon-menu"></i>
+          <span slot="title">案件</span>
+        </el-menu-item>
+        <!-- <el-submenu index="2">
           <template slot="title">
             <i class="el-icon-menu"></i>
             <span class="spanTitle">工作台</span>
@@ -33,19 +37,19 @@
             <el-menu-item index="/work" @click="saveNavState('/work')">
               民警
             </el-menu-item>
-            <!-- <el-menu-item index="/captain" @click="saveNavState('/captain')">
+            <el-menu-item index="/captain" @click="saveNavState('/captain')">
 							<i class="el-icon-user-solid"></i>大队长
 						</el-menu-item>
 						<el-menu-item index="/bigcaptain" @click="saveNavState('/bigcaptain')">
 							<i class="el-icon-user-solid"></i>法制大队
-						</el-menu-item> -->
+						</el-menu-item>
             <el-menu-item index="/leader" @click="saveNavState('/leader')">
               领导审核
             </el-menu-item>
-            <!-- 		<el-menu-item index="/reporter">报警记录</el-menu-item>
-						<el-menu-item index="/people">警员信息</el-menu-item> -->
+            		<el-menu-item index="/reporter">报警记录</el-menu-item>
+						<el-menu-item index="/people">警员信息</el-menu-item>
           </el-menu-item-group>
-        </el-submenu>
+        </el-submenu> -->
         <el-menu-item index="/checkout">
           <i class="el-icon-document-checked"></i>
           <span>在线验证</span>
@@ -129,10 +133,10 @@ export default {
 }
 
 .el-menu-item {
-	font-size: 16px;
+  font-size: 16px;
 }
 .spanTitle {
-	font-size: 16px;
+  font-size: 16px;
 }
 
 .toggle-button {
