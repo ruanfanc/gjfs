@@ -1,69 +1,343 @@
 <template>
-	<div class="mainbox">
-		<el-table :data="nocheck" stripe style="width: 100%">
+  <div class="mainbox">
+    <!-- 操作按钮 -->
+    <div class="filter-container">
+      <!-- <el-input
+        v-model="listQuery.title"
+        placeholder="案件描述"
+        style="width: 200px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />
+      <el-input
+        v-model="listQuery.importance"
+        placeholder="办案人"
+        style="width: 200px;"
+        class="filter-item"
+      >
+      </el-input>
+      <el-select
+        v-model="listQuery.type"
+        placeholder="案件类型"
+        clearable
+        class="filter-item"
+        style="width: 130px"
+      >
+        <el-option
+          v-for="item in calendarTypeOptions"
+          :key="item.key"
+          :label="item.display_name + '(' + item.key + ')'"
+          :value="item.key"
+        />
+      </el-select>
+      <el-select
+        v-model="listQuery.importance"
+        placeholder="重要程度"
+        clearable
+        style="width: 130px"
+        class="filter-item"
+      >
+        <el-option
+          v-for="item in importanceOptions"
+          :key="item"
+          :label="item"
+          :value="item"
+        />
+      </el-select>
+      <el-button
+        v-waves
+        class="filter-item"
+        type="primary"
+        icon="el-icon-search"
+        @click="handleFilter"
+      >
+        搜索
+      </el-button> -->
+      <el-button
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="primary"
+        icon="el-icon-edit"
+        @click="creatCaseDia = true"
+      >
+        创建案件
+      </el-button>
+      <!-- <el-button
+        v-waves
+        :loading="downloadLoading"
+        class="filter-item"
+        type="primary"
+        icon="el-icon-download"
+        @click="handleDownload"
+      >
+        导出
+      </el-button> -->
+    </div>
 
-			<el-table-column prop="caseId" label="案件编号"></el-table-column>
-			<el-table-column prop="caseName" label="案件名称"></el-table-column>
-			<el-table-column prop="caseDecription" label="案情描述"></el-table-column>
-			<el-table-column prop="time" label="创建时间"></el-table-column>
-			<el-table-column prop="typeName" label="案件类型"></el-table-column>
-			<el-table-column prop="staffId" label="负责人">
-				<template slot-scope="{row}">
-					<span v-if="row.staffId== '1001'">张志和</span>
-					<span v-if="row.staffId== '1002'">谢燕</span>
-					<span v-if="row.staffId== '1003'">王爱国</span>
-					<span v-if="row.staffId== '1004'">李建国</span>
-				</template>
-			</el-table-column>
+    <el-table
+      highlight-current-row
+      :data="
+        nocheck.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+      "
+      stripe
+      style="width: 100%"
+    >
+      <el-table-column prop="caseId" label="案件编号"></el-table-column>
+      <el-table-column prop="caseName" label="案件名称"></el-table-column>
+      <el-table-column
+        prop="caseDecription"
+        label="案情描述"
+        width="350"
+      ></el-table-column>
+      <el-table-column
+        sortable
+        prop="time"
+        label="创建时间"
+        width="100"
+      ></el-table-column>
+      <el-table-column prop="caseTypeId" label="案件类型"></el-table-column>
+      <el-table-column label="重要程度">
+        <template slot-scope="{ row }">
+          <el-tag type="danger" v-if="row.importace == 1">重案要案</el-tag>
+          <el-tag v-else>一般案件</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="staffId" label="负责人"></el-table-column>
 
-			<el-table-column label="操作" width="250">
-				<!-- eslint-disable -->
-				<template slot-scope="{row}">
-					<el-tooltip effect="dark" content="查看证据" placement="top" :enterable="false">
-						<el-button type="primary"  size="mini" @click="lookevidence(row.caseId)">查看证据</el-button>
-					</el-tooltip>
-					<el-tooltip effect="dark" content="上传证据" placement="top" :enterable="false">
-						<el-button type="success"  size="mini" @click="dialogupload(row.caseId)">上传证据</el-button>
-					</el-tooltip>
-				</template>
-			</el-table-column>
-			<!-- <el-table-column label="审核" width="150">
+      <el-table-column label="操作" width="250">
+        <!-- eslint-disable -->
+        <template slot-scope="{ row }">
+          <el-button
+            type="primary"
+            size="mini"
+            @click="lookevidence(row.caseId)"
+            >证据链</el-button
+          >
+
+          <el-button
+            type="success"
+            size="mini"
+            @click="dialogupload(row.caseId)"
+            >上传证据</el-button
+          >
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="审核" width="150">
 		
 					<el-button type="success" icon="el-icon-check" size="mini" @click="pass"></el-button>
 					<el-button type="danger" icon="el-icon-warning" size="mini"></el-button>
 		
 				</el-table-column> -->
-		</el-table>
+    </el-table>
+	<div class="pagebox">
+		 <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :page-sizes="[10, 20, 30, 50, 100]"
+      :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="nocheck.length"
+      style="float:right;margin-top:15px;"
+    >
+    </el-pagination>
+	</div>
+   
 
-		</el-tabs>
+    <!-- 证据弹窗 dialogVisible1-->
+    <el-dialog
+      title="证据链"
+      :visible.sync="dialogVisible1"
+      width="80%"
+      fullscreen
+    >
+      <span>
+        <el-table :data="evidence" stripe style="width: 100%">
+          <el-table-column prop="evidenceId" label="存证编号"></el-table-column>
+          <el-table-column prop="note" label="证物描述"></el-table-column>
+          <el-table-column label="审核状态">
+            <template slot-scope="{ row }">
+              <el-tag type="info" v-if="!row.examine">未审核</el-tag>
+              <el-tag type="success" v-else>{{ row.examine }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column
+            sortable
+            prop="date"
+            label="搜集时间"
+          ></el-table-column>
+          <el-table-column label="操作" width="150">
+            <!-- eslint-disable -->
+            <template slot-scope="{ row }">
+              <el-button
+                type="primary"
+                size="mini"
+                @click="lookevidenceinfo(row.evidenceId)"
+                >校验</el-button
+              >
+            </template>
+          </el-table-column>
+          <el-table-column label="审核" width="250">
+            <!-- eslint-disable -->
+            <template slot-scope="{ row }">
+              <el-button
+                type="success"
+                size="mini"
+                @click="passExamine(row.evidenceId, row.caseId)"
+                >通过</el-button
+              >
+              <el-button
+                type="warning"
+                size="mini"
+                @click="noPass(row.evidenceId, row.caseId)"
+                >不通过</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+      </span>
+      <span slot="footer" class="dialog-footer">
+        <!-- <el-button
+          @click="openFullScreen1"
+          type="success"
+          v-loading.fullscreen.lock="fullscreenLoading"
+          >安全性检查</el-button
+        > -->
+        <el-button type="primary" @click="dialogVisible1 = false"
+          >返 回</el-button
+        >
+      </span>
+    </el-dialog>
+    <!-- 详情弹窗 dialogVisibleinfo -->
+    <el-dialog title="证据详情" :visible.sync="dialogVisibleinfo" width="70%">
+      <img :src="imgurl" style="width: 50%;height: auto;" />
+    </el-dialog>
+    <!-- 未通过批复弹窗 dialogVisibleNoPass-->
+    <el-dialog :visible.sync="dialogVisibleNoPass" width="80%">
+      <el-form :model="noPassForm" size="medium" label-width="100px">
+        <el-form-item label="证据编号" prop="evidenceId">
+          <el-input
+            v-model="noPassForm.evidenceId"
+            disabled="true"
+            clearable
+            :style="{ width: '100%' }"
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item label="原因" prop="value">
+          <el-input
+            v-model="noPassForm.value"
+            placeholder="未通过原因"
+            clearable
+            :style="{ width: '100%' }"
+          >
+          </el-input>
+        </el-form-item>
+        <el-button
+          style="margin-left: 10px;"
+          size="small"
+          type="primary"
+          @click="noPassSubmit"
+          >提交</el-button
+        >
+      </el-form>
+    </el-dialog>
+    <!-- 创建案件弹框 creatCaseDia -->
+    <el-dialog title="创建案件" :visible.sync="creatCaseDia" width="70%">
+      <span>
+        <el-row :gutter="20">
+          <el-form
+            :model="newCaseForm"
+            size="medium"
+            label-width="84px"
+            label-position="left"
+            ref="elForm"
+          >
+            <el-col :span="14">
+              <el-form-item label="案件编号" prop="caseId">
+                <el-input
+                  v-model="newCaseForm.caseId"
+                  placeholder="请输入接警案件编号"
+                  clearable
+                  :style="{ width: '100%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
 
-		<el-dialog title="证据链" :visible.sync="dialogVisible1" width="80%" :before-close="handleClose">
-			<span>
-				<el-table :data="evidence" stripe style="width: 100%">
+            <el-col :span="19">
+              <el-form-item label="案件名称" prop="caseName">
+                <el-input
+                  v-model="newCaseForm.caseName"
+                  placeholder="案件名称"
+                  clearable
+                  :style="{ width: '100%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
 
-					<el-table-column prop="evidenceId" label="存证编号"></el-table-column>
-					<el-table-column prop="note" label="证物描述"></el-table-column>
-					<el-table-column sortable prop="date" label="搜集时间"></el-table-column>
-					<el-table-column label="操作" width="150">
-						<!-- eslint-disable -->
-						<template slot-scope="{row}">
-							<el-tooltip effect="dark" content="查看证照" placement="top" :enterable="false">
-								<el-button type="primary" icon="el-icon-view" size="mini" @click="lookevidenceinfo(row.evidenceId)"></el-button>
-							</el-tooltip>
-						</template>
-					</el-table-column>
-				</el-table>
-			</span>
-			<span slot="footer" class="dialog-footer">
-				<el-button @click="openFullScreen1" type="success" v-loading.fullscreen.lock="fullscreenLoading">安全性检查</el-button>
-				<el-button type="primary" @click="dialogVisible1 = false">确 定</el-button>
-			</span>
-		</el-dialog>
-		<el-dialog title="证据详情" :visible.sync="dialogVisibleinfo" width="80%" :before-close="handleClose">
-			<img :src="imgurl" style="width: 50%;height: auto;" />
-		</el-dialog>
+            <el-col :span="24">
+              <el-form-item label="案件描述" prop="caseDescription">
+                <el-input
+                  v-model="newCaseForm.caseDescription"
+                  type="textarea"
+                  placeholder="案件描述"
+                  :autosize="{ minRows: 4 }"
+                  :style="{ width: '100%' }"
+                ></el-input>
+              </el-form-item>
+            </el-col>
 
-		<!-- <el-dialog title="提示" :visible.sync="dialogVisible2" width="30%" :before-close="handleClose">
+            <el-col :span="24">
+              <el-form-item label="案件类型" prop="caseType">
+                <el-radio-group v-model="newCaseForm.caseType" size="medium">
+                  <el-radio
+                    v-for="(item, index) in caseTypeOptions"
+                    :key="index"
+                    :label="item.value"
+                    :disabled="item.disabled"
+                    >{{ item.label }}
+                  </el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="重要程度" prop="importace">
+                <el-radio-group v-model="newCaseForm.importace" size="medium">
+                  <el-radio label="0">一般案件</el-radio>
+                  <el-radio label="1">重案要案</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="可见部门" prop="ids">
+                <el-checkbox-group v-model="newCaseForm.ids">
+                  <el-checkbox
+                    v-for="(item, index) in DepartmentIdsOptions"
+                    :key="index"
+                    :label="item.value"
+                    :disabled="item.disabled"
+                    >{{ item.label }}</el-checkbox
+                  >
+                </el-checkbox-group>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="24">
+              <el-form-item size="large">
+                <el-button type="primary" @click="submitCaseForm"
+                  >提交</el-button
+                >
+                <el-button @click="resetForm">重置</el-button>
+              </el-form-item>
+            </el-col>
+          </el-form>
+        </el-row>
+      </span>
+    </el-dialog>
+
+    <!-- <el-dialog title="提示" :visible.sync="dialogVisible2" width="30%" :before-close="handleClose">
 			<span>
 				是否将物证上传至区块链网络？
 			</span>
@@ -72,183 +346,326 @@
 				<el-button type="primary" @click="uploadevi">确 定</el-button>
 			</span>
 		</el-dialog> -->
-		<el-dialog title="证据上传" :visible.sync="dialogVisible2" width="70%">
-			<!-- 表单 -->
-			<el-form ref="evidenceForm" :model="evidenceData" :rules="rulesevi" size="medium" label-width="100px" >
-				<el-form-item label="案件编号" prop="caseId">
-					<el-input v-model="evidenceData.caseId" disabled="true" clearable :style="{width: '100%'}">
-					</el-input>
-				</el-form-item>
-				<el-form-item label="证据编号" prop="evidenceId">
-					<el-input v-model="evidenceData.evidenceId" placeholder="请输入证据编号" clearable :style="{width: '100%'}">
-					</el-input>
-				</el-form-item>
-				<el-form-item label="证据描述" prop="note">
-					<el-input v-model="evidenceData.note" type="textarea" placeholder="请输入证据基本描述" :autosize="{minRows: 4, maxRows: 4}"
-					 :style="{width: '100%'}"></el-input>
-				</el-form-item>
-				  <el-form-item label="可见部门" prop="DepartmentIds">
-				    <el-checkbox-group v-model="evidenceData.DepartmentIds">
-				      <el-checkbox v-for="(item, index) in DepartmentIdsOptions" :key="index" :label="item.value"
-				                 :disabled="item.disabled">{{item.label}}</el-checkbox>
-				    </el-checkbox-group>
-				  </el-form-item>
-			
-				<el-upload style="margin: 30px;" class="upload-demo" ref="upload" action="/api1/evidence/postevidence"
-				 :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :auto-upload="false" name="evidenceUrl" :data="evidenceData"  list-type="picture" :on-success="handelsuccess">
-					<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-					<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-					
-				</el-upload>
-			</el-form>
-		</el-dialog>
+    <el-dialog title="证据上传" :visible.sync="dialogVisible2" width="70%">
+      <!-- 表单 -->
+      <el-form
+        ref="evidenceForm"
+        :model="evidenceData"
+        :rules="rulesevi"
+        size="medium"
+        label-width="100px"
+      >
+        <el-form-item label="案件编号" prop="caseId">
+          <el-input
+            v-model="evidenceData.caseId"
+            disabled="true"
+            clearable
+            :style="{ width: '100%' }"
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item label="证据编号" prop="evidenceId">
+          <el-input
+            v-model="evidenceData.evidenceId"
+            placeholder="请输入证据编号"
+            clearable
+            :style="{ width: '100%' }"
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item label="证据描述" prop="note">
+          <el-input
+            v-model="evidenceData.note"
+            type="textarea"
+            placeholder="请输入证据基本描述"
+            :autosize="{ minRows: 4 }"
+            :style="{ width: '100%' }"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="可见部门" prop="DepartmentIds">
+          <el-checkbox-group v-model="evidenceData.DepartmentIds">
+            <el-checkbox
+              v-for="(item, index) in DepartmentIdsOptions"
+              :key="index"
+              :label="item.value"
+              :disabled="item.disabled"
+              >{{ item.label }}</el-checkbox
+            >
+          </el-checkbox-group>
+        </el-form-item>
 
-
-	</div>
+        <el-upload
+          limit="1"
+          drag="true"
+          style="margin: 30px;"
+          class="upload-demo"
+          ref="upload"
+          action="/api1/evidence/postevidence"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :file-list="fileList"
+          :auto-upload="false"
+          name="evidenceUrl"
+          :data="evidenceData"
+          list-type="text"
+          :on-success="handelsuccess"
+          :before-upload="handelUpload"
+        >
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">
+            将文件拖到此处，或<el-button
+              slot="trigger"
+              size="small"
+              type="primary"
+              >选取文件</el-button
+            >
+          </div>
+          <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->
+        </el-upload>
+        <el-button
+          style="margin-left: 700px;"
+          type="success"
+          @click="submitUpload"
+          >提交</el-button
+        >
+      </el-form>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
-	export default {
-		//inject: ['reload'],
-		data() {
-			return {
-				fileList: [],
-				fullscreenLoading: false,
-				activeName: 'first',
-				nocheck: [],
-				evidence: [],
-				dialogVisible1: false,
-				dialogVisible2: false,
-				dialogVisibleinfo: false,
-				Id: 61232764,
-				token: '',
-				imgurl: '',
-				evidenceData: {
-					DepartmentIds: [101],
-					evidenceId:undefined,
-					caseId:'',
-					token:'',
-					note:''
-				},
-				 DepartmentIdsOptions: [{
-				        "label": "公安局",
-				        "value": 101
-				      }, {
-				        "label": "检察院",
-				        "value": 102
-				      },
-					  {
-					    "label": "法院",
-					    "value": 103
-					  },
-					  {
-					    "label": "司法局",
-					    "value": 104
-					  }],
-				rulesevi: {
-					evidenceId: [{
-						required: true,
-						message: '请输入证据编号',
-						trigger: 'blur'
-					}],
-					note: [{
-						required: true,
-						message: '请输入证据基本描述',
-						trigger: 'blur'
-					}],
-					DepartmentIds:[{
-						type: 'array', required: true, message: '请至少选择一个可见部门', trigger: 'change'
-					}]
-				},
-
-
-			}
-		},
-		created() {
-			this.noCheck()
-		},
-		methods: {
-
-			async noCheck() {
-				this.token = window.sessionStorage.getItem('token')
-				console.log(this.token)
-				/* var formData = new FormData();
+export default {
+  //inject: ['reload'],
+  data() {
+    return {
+      pageSize: 10, //每页多少条
+      currentPage: 1, // 当前页
+      loading: true,
+      listQuery: {
+        page: 1,
+        limit: 20,
+        importance: undefined,
+        title: undefined,
+        type: undefined,
+        sort: "+id"
+      },
+      creatCaseDia: false,
+      dialogVisibleNoPass: false,
+      fileList: [],
+      fullscreenLoading: false,
+      activeName: "first",
+      nocheck: [],
+      evidence: [],
+      noPassForm: {},
+      dialogVisible1: false,
+      dialogVisible2: false,
+      dialogVisibleinfo: false,
+      Id: 61232764,
+      token: "",
+      imgurl: "",
+      caseId: "",
+      newCaseForm: {
+        ids: [101]
+      },
+      evidenceData: {
+        DepartmentIds: [101],
+        evidenceId: undefined,
+        caseId: "",
+        token: "",
+        note: ""
+      },
+      caseTypeOptions: [
+        {
+          label: "刑事案件",
+          value: "刑事案件"
+        },
+        {
+          label: "行政案件",
+          value: "行政案件"
+        },
+        {
+          label: "民事诉讼",
+          value: "民事诉讼"
+        }
+      ],
+      DepartmentIdsOptions: [
+        {
+          label: "公安局",
+          value: 101
+        },
+        {
+          label: "检察院",
+          value: 102
+        },
+        {
+          label: "法院",
+          value: 103
+        },
+        {
+          label: "司法局",
+          value: 104
+        }
+      ],
+      rulesevi: {
+        evidenceId: [
+          {
+            required: true,
+            message: "请输入证据编号",
+            trigger: "blur"
+          }
+        ],
+        note: [
+          {
+            required: true,
+            message: "请输入证据基本描述",
+            trigger: "blur"
+          }
+        ],
+        DepartmentIds: [
+          {
+            type: "array",
+            required: true,
+            message: "请至少选择一个可见部门",
+            trigger: "change"
+          }
+        ]
+      }
+    };
+  },
+  created() {
+    this.noCheck();
+  },
+  methods: {
+    //   获取全部案件
+    async noCheck() {
+      // this.token = window.sessionStorage.getItem('token')
+      // console.log(this.token)
+      /* var formData = new FormData();
 				formData.append("token",window.sessionStorage.getItem('token')); */
-				const {
-					data: res
-				} = await this.$http.post('/api1/cases/getcase')
-				if (res.code !== 0) return this.$message.error('获取数据失败！')
-				this.nocheck = res.data
-			},
-			handleClick(tab, event) {
-				console.log(tab, event);
-			},
-			handleClose(done) {
-				this.$confirm('确认关闭？')
-					.then(_ => {
-						done();
-					})
-					.catch(_ => {});
-			},
-			async openFullScreen1() {
-				this.fullscreenLoading = true;
-				setTimeout(() => {
-					this.fullscreenLoading = false;
-				}, 2000);
-				const {
-					data: res
-				} = await this.$http.get('/api5/scc/insert/get/2')
-				console.log(res)
-				if (res.ok) return this.$message.success('比对成功！')
-				return this.$message.error("证据描述被篡改！请联系管理员")
-			},
-			/* 查看证据弹窗 */
-			async lookevidence(id) {
-				console.log(id)
-				this.dialogVisible1 = true
-				const {
-					data: res
-				} = await this.$http.post('/api1/evidence/getevidence', {
-					"token": this.token,
-					"caseId": id				})
-				console.log(res)
-				this.evidence = res.data
-			},
-			/* 查看证据详情弹窗 */
-			async lookevidenceinfo(id) {
-				console.log(id)
-				this.dialogVisible1 = false
-				this.dialogVisibleinfo = true
-				const {
-					data: res
-				} = await this.$http.get('/api1/evidence/getone/' + id)
-				console.log(res)
-				this.imgurl = 'data:image/jpeg;base64,' + res.data.evidenceUrl
-			},
-			/* 确定上传 */
-			uploadevi() {
-				this.dialogVisible2 = false
-				this.$message.success("上传成功！")
-			},
-			/* 审核通过 */
-			async pass() {
-				this.$confirm('确认通过审核？', '提示', {
-						confirmButtonText: '确认',
-						cancelButtonText: '取消'
-					})
-					.then(async (action) => {
-						if (action === 'confirm') {
-							const {
-								data: res
-							} = await this.$http.post('/api3/basic/examine/success?id=61232764')
-							this.noCheck();
-						}
-					})
-					.catch(() => {
+      const { data: res } = await this.$http.post("/api1/cases/getcase");
+      if (res.code !== 0) return this.$message.error("获取数据失败！");
+      this.nocheck = res.data;
+      if (this.nocheck) {
+        this.nocheck.forEach(item => {
+          item.time = new Date(Date.parse(item.time)).toLocaleDateString();
+        });
+      }
+    },
+    // 审核通过
+    async passExamine(id, caseId) {
+      this.$confirm("确认通过审核？", "提示", {
+        confirmButtonText: "确认",
+        cancelButtonText: "取消"
+      }).then(async action => {
+        if (action === "confirm") {
+          const { data: res } = await this.$http.put(
+            "/api1/examine/passEXamine/" + id
+          );
+          this.lookevidence(caseId);
+          return this.$message.success("审核通过");
+        }
+      });
+    },
+    // 审核不通过
+    noPass(id, caseId) {
+      this.caseId = caseId;
+      this.noPassForm.evidenceId = id;
+      this.dialogVisibleNoPass = true;
+    },
+    async noPassSubmit() {
+      const { data: res } = await this.$http({
+        method: "put",
+        url: "/api1/examine/RefuseExamine",
+        data: this.noPassForm
+      });
+      this.dialogVisibleNoPass = false;
+      this.lookevidence(this.caseId);
+      return this.$message.success("提交成功");
+    },
+    // 创建案件
+    async submitCaseForm() {
+      const { data: res } = await this.$http.post(
+        "/api1/cases/addCase",
+        this.newCaseForm
+      );
+      this.creatCaseDia = false;
+      if (res.code == 0) {
+        return this.$message.success("创建成功！");
+      }
+      return this.$message.error("操作失败！");
+      console.log("res", res);
+    },
 
-					});
-			},
-		/* 	handelEvi() {
+    // 证据对比
+    async openFullScreen1() {
+      this.fullscreenLoading = true;
+      setTimeout(() => {
+        this.fullscreenLoading = false;
+      }, 2000);
+      const { data: res } = await this.$http.get("/api5/scc/insert/get/2");
+      console.log(res);
+      if (res.ok) return this.$message.success("比对成功！");
+      return this.$message.error("证据描述被篡改！请联系管理员");
+    },
+
+    /* 查看证据弹窗 */
+    async lookevidence(id) {
+      console.log(id);
+      this.dialogVisible1 = true;
+      const { data: res } = await this.$http.post(
+        "/api1/evidence/getevidence",
+        {
+          token: this.token,
+          caseId: id
+        }
+      );
+
+      this.evidence = res.data;
+      //添加caseId
+      this.evidence.forEach(item => {
+        item.caseId = id;
+        item.date = new Date(Date.parse(item.date)).toLocaleDateString();
+      });
+      console.log("caseid :>> ", this.evidence);
+    },
+
+    /* 查看证据详情弹窗 */
+    async lookevidenceinfo(id) {
+      console.log(id);
+
+      // this.dialogVisible1 = false;
+      this.dialogVisibleinfo = true;
+      this.imgurl = "";
+      // this.loading = true;
+      const { data: res } = await this.$http.get("/api1/evidence/getone/" + id);
+      if (res.code !== 0) return this.$message.error("加载失败，请刷新后重试");
+      this.imgurl = "data:image/jpeg;base64," + res.data.evidenceUrl;
+    },
+
+    /* 确定上传 */
+    uploadevi() {
+      this.dialogVisible2 = false;
+      this.$message.success("上传成功！");
+    },
+
+    /* 审核通过 */
+    // async pass() {
+    //   this.$confirm("确认通过审核？", "提示", {
+    //     confirmButtonText: "确认",
+    //     cancelButtonText: "取消"
+    //   })
+    //     .then(async action => {
+    //       if (action === "confirm") {
+    //         const { data: res } = await this.$http.post(
+    //           "/api3/basic/examine/success?id=61232764"
+    //         );
+    //         this.noCheck();
+    //         return this.$message.success("审核通过");
+    //       }
+    //     })
+    //     .catch(() => {});
+    // },
+    /* 	handelEvi() {
 				this.$refs['evidenceForm'].validate(async valid => {
 					if (!valid) return
 					// TODO 提交表单
@@ -257,42 +674,65 @@
 					return this.$message.success('上传成功，等待大队长审核')
 				})
 			}, */
-			dialogupload(caseId) {
-				this.dialogVisible2 = true
-				this.evidenceData.caseId = caseId
-				this.evidenceData.token = window.sessionStorage.getItem('token')
+    // 打开证据上传弹窗，并绑定caseId
+    dialogupload(caseId) {
+      this.dialogVisible2 = true;
+      this.evidenceData.caseId = caseId;
+      this.evidenceData.token = window.sessionStorage.getItem("token");
+    },
 
-			},
-			submitUpload() {
-				this.$refs.upload.submit();
-				
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
 
-			},
-			handleRemove(file, fileList) {
-				console.log(file, fileList);
-			},
-			handlePreview(file) {
-				console.log(file);
-			},
-			handelsuccess(response){
-				console.log(response)
-				if(response.code == 0){
-					this.dialogVisible2=false
-					return this.$message.success("证据已上传至区块链！")
-				}
-				return this.$message.error("图片过大，请压缩后上传")
-			}
-		}
-	}
+    // 证据文件上传前数据绑定
+    handelUpload(file) {
+      this.evidenceData.isImg = file.type == "image/png" ? 1 : 0;
+    },
+
+    handlePreview(file) {
+      console.log(file);
+    },
+
+    handelsuccess(response) {
+      console.log(this.evidenceData);
+      if (response.code == 0) {
+        this.dialogVisible2 = false;
+        return this.$message.success("证据已上传至区块链！");
+      }
+      return this.$message.error("文件过大，请压缩后上传");
+    },
+
+    // 重置表单
+    resetForm() {
+      this.$refs["elForm"].resetFields();
+    },
+    // 每页多少条
+    handleSizeChange(val) {
+      this.pageSize = val;
+    },
+    // 当前页
+    handleCurrentChange(val) {
+      this.currentPage = val;
+    }
+  }
+};
 </script>
 
 <style>
-	.text-item {
-		padding: 15px;
-		color: gray
-	}
+.filter-container {
+  padding-bottom: 30px;
+}
 
-	.el-table {
-		font-size: 10px;
-	}
+.text-item {
+  padding: 15px;
+  color: gray;
+}
+.pagebox {
+	padding: 20px;
+	padding-bottom: 40px;
+}
+.el-table {
+  font-size: 10px;
+}
 </style>

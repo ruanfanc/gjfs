@@ -2,9 +2,10 @@ import Vue from 'vue'
 import { Button, Form, FormItem, Input ,Message, Container, Header, Aside, Main, Menu, Submenu,
  MenuItemGroup, MenuItem, Breadcrumb, BreadcrumbItem, Card, Dialog,Row, Col,
  TimePicker,Option,Select,InputNumber,Checkbox,CheckboxGroup,Table,TableColumn,Tooltip
- ,Tabs,TabPane,Pagination,Carousel,CarouselItem,RadioGroup,Radio,MessageBox,Timeline,TimelineItem,Divider,Upload} from 'element-ui'
+ ,Tabs,TabPane,Pagination,Carousel,CarouselItem,RadioGroup,Radio,MessageBox,Timeline,TimelineItem,Divider,Upload,Tag} from 'element-ui'
 
 Vue.use(Upload)
+Vue.use(Tag)
 Vue.use(Divider)
 Vue.use(TimelineItem)
 Vue.use(Timeline)

@@ -1,25 +1,50 @@
 <template>
   <div class="mainset">
+    <el-row  class="boxcard" style="height:50px; padding:30px; padding-top:15px">
+     
+      <el-col :lg="4">
+        姓名：{{information.name}}
+      </el-col>
+       <el-col :lg="4">
+        工号：{{information.id}}
+      </el-col>
+      <el-col :lg="4" v-if="information.departmentId==101">
+        所属机构：公安局
+      </el-col>
+       <el-col :lg="4" v-if="information.departmentId==102">
+        所属机构： 检察院
+      </el-col>
+      <el-col :lg="4" v-if="information.departmentId==103">
+         所属机构：法院
+      </el-col>
+       <el-col :lg="4" v-if="information.departmentId==104">
+         所属机构：司法局
+      </el-col>
+    </el-row>
 	   <panel-group  />
     <div class="cardcontainer">
-      <el-row :gutter="32" >
-        <el-col :xs="24" :sm="8" :lg="8" class="card-panel-col">
+       <el-row :gutter="32" >
+        <el-col :xs="24" :sm="24" :lg="24" class="card-panel-col">
           <div class="boxcard">
             <div id="main" style="height:100%;width: 100%;"></div>
           </div>
         </el-col>
-        <el-col :xs="24" :sm="8" :lg="8" class="card-panel-col">
+      </el-row>
+      <el-row :gutter="32" >
+       
+        <el-col :xs="24" :sm="12" :lg="12" class="card-panel-col">
           <div class="boxcard">
             <div id="barchar" style="height:100%;width: 100%;"></div>
           </div>
         </el-col>
-        <el-col :xs="24" :sm="8" :lg="8" class="card-panel-col">
+        <el-col :xs="24" :sm="12" :lg="12" class="card-panel-col">
           <div class="boxcard">
             <div id="linechar" style="height:100%;width: 100%;"></div>
           </div>
         </el-col>
       </el-row>
       <el-row>
+        
         <el-col style="height: 300px; background-color: #FFFFFF;">
           <div class="titlebox">
             <a
@@ -60,10 +85,21 @@ export default {
     PanelGroup
   },
   data() {
-    return {};
+    return {
+      information:{
+        name:'',
+        id:'',
+        departmentId:''
+      }
+    };
   },
 
-  created() {},
+  created() {
+    this.information.name =  window.sessionStorage.getItem('name');
+    this.information.id =  window.sessionStorage.getItem('id');
+    this.information.departmentId =  window.sessionStorage.getItem('departmentId');
+    console.log('this.information :>> ', this.information);
+  },
   mounted() {
     this.useEchart();
   },
