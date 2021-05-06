@@ -129,20 +129,19 @@
 		
 				</el-table-column> -->
     </el-table>
-	<div class="pagebox">
-		 <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="currentPage"
-      :page-sizes="[10, 20, 30, 50, 100]"
-      :page-size="pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="nocheck.length"
-      style="float:right;margin-top:15px;"
-    >
-    </el-pagination>
-	</div>
-   
+    <div class="pagebox">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[10, 20, 30, 50, 100]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="nocheck.length"
+        style="float:right;margin-top:15px;"
+      >
+      </el-pagination>
+    </div>
 
     <!-- 证据弹窗 dialogVisible1-->
     <el-dialog
@@ -158,7 +157,18 @@
           <el-table-column label="审核状态">
             <template slot-scope="{ row }">
               <el-tag type="info" v-if="!row.examine">未审核</el-tag>
-              <el-tag type="success" v-else>{{ row.examine }}</el-tag>
+              <el-tag
+                v-else-if="
+                  row.examine ==
+                    ('法院审核通过' ||
+                      '检察院审核通过' ||
+                      '司法局审核通过' ||
+                      '公安部门审核通过')
+                "
+                type="success"
+                >{{ row.examine }}</el-tag
+              >
+              <el-tag v-else type="danger"> {{ row.examine }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column
@@ -210,7 +220,15 @@
     </el-dialog>
     <!-- 详情弹窗 dialogVisibleinfo -->
     <el-dialog title="证据详情" :visible.sync="dialogVisibleinfo" width="70%">
-      <img :src="imgurl" style="width: 50%;height: auto;" />
+      <div class="imgbox" v-if="imgurl !==''">
+        <img :src="imgurl"  v-if="imgurl!==''" style="width: 50%;height: auto;" />
+      </div>
+    
+      <div class="textbox" v-if="imgurl">
+        <el-button type="success" icon="el-icon-check" circle></el-button>
+        区块链校验通过  <a class="file" :href="fileUrl">点击下载</a>
+      </div>
+    
     </el-dialog>
     <!-- 未通过批复弹窗 dialogVisibleNoPass-->
     <el-dialog :visible.sync="dialogVisibleNoPass" width="80%">
@@ -438,6 +456,7 @@ export default {
   //inject: ['reload'],
   data() {
     return {
+      fileUrl: "",
       pageSize: 10, //每页多少条
       currentPage: 1, // 当前页
       loading: true,
@@ -636,10 +655,27 @@ export default {
       // this.dialogVisible1 = false;
       this.dialogVisibleinfo = true;
       this.imgurl = "";
+      this.fileUrl = "";
       // this.loading = true;
       const { data: res } = await this.$http.get("/api1/evidence/getone/" + id);
-      if (res.code !== 0) return this.$message.error("加载失败，请刷新后重试");
-      this.imgurl = "data:image/jpeg;base64," + res.data.evidenceUrl;
+      if (res.code !== 0) {
+        this.dialogVisibleinfo = false;
+        return this.$message.error("加载失败，请刷新后重试");
+      }
+      if (res.data.isImg == 0) {
+        this.fileUrl = res.data.evidenceUrl;
+        let blob = new Blob([this.fileUrl], {
+          type:
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }); // for .xlsx files
+
+        // 通过URL.createObjectURL生成文件路径
+        this.fileUrl = window.URL.createObjectURL(blob);
+      }
+        this.imgurl = "data:image/jpeg;base64," + res.data.evidenceUrl;
+      
+      console.log("this.fileUrl :>> ", this.fileUrl);
+      
     },
 
     /* 确定上传 */
@@ -729,8 +765,8 @@ export default {
   color: gray;
 }
 .pagebox {
-	padding: 20px;
-	padding-bottom: 40px;
+  padding: 20px;
+  padding-bottom: 40px;
 }
 .el-table {
   font-size: 10px;
