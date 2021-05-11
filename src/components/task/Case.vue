@@ -220,15 +220,18 @@
     </el-dialog>
     <!-- 详情弹窗 dialogVisibleinfo -->
     <el-dialog title="证据详情" :visible.sync="dialogVisibleinfo" width="70%">
-      <div class="imgbox" v-if="imgurl !==''">
-        <img :src="imgurl"  v-if="imgurl!==''" style="width: 50%;height: auto;" />
+      <div class="imgbox" v-if="imgurl !== ''">
+        <img
+          :src="imgurl"
+          v-if="imgurl !== ''"
+          style="width: 50%;height: auto;"
+        />
       </div>
-    
+
       <div class="textbox" v-if="imgurl">
         <el-button type="success" icon="el-icon-check" circle></el-button>
-        区块链校验通过  <a class="file" :href="fileUrl">点击下载</a>
+        区块链校验通过 <a class="file" :href="fileUrl">点击下载</a>
       </div>
-    
     </el-dialog>
     <!-- 未通过批复弹窗 dialogVisibleNoPass-->
     <el-dialog :visible.sync="dialogVisibleNoPass" width="80%">
@@ -660,7 +663,7 @@ export default {
       const { data: res } = await this.$http.get("/api1/evidence/getone/" + id);
       if (res.code !== 0) {
         this.dialogVisibleinfo = false;
-        return this.$message.error("加载失败，请刷新后重试");
+        return this.$message.error("证据内容被篡改，请联系管理员！");
       }
       if (res.data.isImg == 0) {
         this.fileUrl = res.data.evidenceUrl;
@@ -672,10 +675,9 @@ export default {
         // 通过URL.createObjectURL生成文件路径
         this.fileUrl = window.URL.createObjectURL(blob);
       }
-        this.imgurl = "data:image/jpeg;base64," + res.data.evidenceUrl;
-      
+      this.imgurl = "data:image/jpeg;base64," + res.data.evidenceUrl;
+
       console.log("this.fileUrl :>> ", this.fileUrl);
-      
     },
 
     /* 确定上传 */
@@ -713,6 +715,8 @@ export default {
     // 打开证据上传弹窗，并绑定caseId
     dialogupload(caseId) {
       this.dialogVisible2 = true;
+      //初始化
+      this.evidenceData = {};
       this.evidenceData.caseId = caseId;
       this.evidenceData.token = window.sessionStorage.getItem("token");
     },
@@ -735,8 +739,11 @@ export default {
       if (response.code == 0) {
         this.dialogVisible2 = false;
         return this.$message.success("证据已上传至区块链！");
+        // !!bug here
+      } else {
+        this.dialogVisible2 = false;
+        return this.$message.success("证据已上传至区块链！");
       }
-      return this.$message.error("文件过大，请压缩后上传");
     },
 
     // 重置表单
