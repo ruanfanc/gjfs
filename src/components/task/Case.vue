@@ -54,6 +54,7 @@
         搜索
       </el-button> -->
       <el-button
+        v-if="departmentId == 101 || departmentId == 103"
         class="filter-item"
         style="margin-left: 10px;"
         type="primary"
@@ -115,10 +116,19 @@
           >
 
           <el-button
+            v-if="departmentId == 101 || departmentId == 103"
             type="success"
             size="mini"
             @click="dialogupload(row.caseId)"
             >上传证据</el-button
+          >
+
+          <el-button
+            v-else
+            type="warning"
+            size="mini"
+            @click="dialogupload(row.caseId)"
+            >补充材料</el-button
           >
         </template>
       </el-table-column>
@@ -551,11 +561,14 @@ export default {
             trigger: "change"
           }
         ]
-      }
+      },
+      departmentId: ""
     };
   },
   created() {
     this.noCheck();
+    this.departmentId = window.sessionStorage.getItem("departmentId");
+    console.log("this.departmentId :>> ", this.departmentId);
   },
   methods: {
     //   获取全部案件
