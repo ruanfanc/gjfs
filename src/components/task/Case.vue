@@ -63,16 +63,15 @@
       >
         创建案件
       </el-button>
-      <!-- <el-button
-        v-waves
-        :loading="downloadLoading"
+      <el-button
+
         class="filter-item"
         type="primary"
         icon="el-icon-download"
         @click="handleDownload"
       >
         导出
-      </el-button> -->
+      </el-button>
     </div>
 
     <el-table
@@ -133,10 +132,10 @@
         </template>
       </el-table-column>
       <!-- <el-table-column label="审核" width="150">
-		
+
 					<el-button type="success" icon="el-icon-check" size="mini" @click="pass"></el-button>
 					<el-button type="danger" icon="el-icon-warning" size="mini"></el-button>
-		
+
 				</el-table-column> -->
     </el-table>
     <div class="pagebox">
@@ -425,20 +424,37 @@
           </el-checkbox-group>
         </el-form-item>
 
+<!--        <el-upload-->
+<!--          limit="1"-->
+<!--          drag="true"-->
+<!--          style="margin: 30px;"-->
+<!--          class="upload-demo"-->
+<!--          ref="upload"-->
+<!--          action="/api1/evidence/postevidence"-->
+<!--          :multiple="true"-->
+<!--          :on-preview="handlePreview"-->
+<!--          :on-remove="handleRemove"-->
+<!--          :file-list="fileList"-->
+<!--          :auto-upload="false"-->
+<!--          name="evidenceUrl"-->
+<!--          :data="evidenceData"-->
+<!--          list-type="text"-->
+<!--          :on-success="handelsuccess"-->
+<!--          :before-upload="handelUpload"-->
+<!--        >-->
         <el-upload
-          limit="1"
-          drag="true"
+          drag
           style="margin: 30px;"
           class="upload-demo"
           ref="upload"
-          action="/api1/evidence/postevidence"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
+          action="/api8/uploadMultiFile"
+          :http-request="httpRequest"
+          multiple
+          name="files"
           :file-list="fileList"
           :auto-upload="false"
-          name="evidenceUrl"
-          :data="evidenceData"
           list-type="text"
+          :on-preview="handlePreview"
           :on-success="handelsuccess"
           :before-upload="handelUpload"
         >
@@ -630,6 +646,34 @@ export default {
       return this.$message.error("操作失败！");
       console.log("res", res);
     },
+    //导出表格
+    handleDownload(){
+      import('../../vendor/Export2Excel').then(excel => {
+        const tHeader = ['案件编号', '案件名称', '案情描述', '创建时间', '案件类型','重要程度','负责人']
+        const filterVal = ['caseId', 'caseName', 'caseDecription', 'time', 'caseTypeId','importace','staffId']
+        const list = this.nocheck
+        const data = this.formatJson(filterVal,list)
+        //console.log(list);
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: '案件导出'
+        })
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => {
+        if (j === 'importace') {
+          if (v[j] == '1') {
+            return v[j] = "重案要案"
+          } else {
+            return v[j] = "一般案件"
+          }
+        }
+        return v[j]
+      }))
+
+    },
 
     // 证据对比
     async openFullScreen1() {
@@ -676,7 +720,7 @@ export default {
       const { data: res } = await this.$http.get("/api1/evidence/getone/" + id);
       if (res.code !== 0) {
         this.dialogVisibleinfo = false;
-        return this.$message.error("证据内容被篡改，请联系管理员！");
+        return this.$message.error("加载失败，请刷新后重试");
       }
       if (res.data.isImg == 0) {
         this.fileUrl = res.data.evidenceUrl;
@@ -719,7 +763,7 @@ export default {
     /* 	handelEvi() {
 				this.$refs['evidenceForm'].validate(async valid => {
 					if (!valid) return
-					// TODO 提交表单
+					// 提交表单
 					await this.$http.post('/api2/police/officePolice/PostEvidence', this.evidenceData)
 					this.dialogVisible2 = false
 					return this.$message.success('上传成功，等待大队长审核')
@@ -734,10 +778,43 @@ export default {
       this.evidenceData.token = window.sessionStorage.getItem("token");
     },
 
-    submitUpload() {
+    /*上传文件*/
+    submitUpload() {//点击上传
       this.$refs.upload.submit();
     },
 
+    async httpRequest(param){
+      let file = param.file;
+      console.log(file);
+      let formData = new FormData();
+      formData.append('file', file);
+      //let config = {'Content-Type':'multipart/form-data'};
+      await this.$http. post("/api8/uploadMultiFile",formData,{headers:{'Content-Type':'multipart/form-data'}});
+    },
+
+    // async submitUpload(){
+    //   console.log(this.fileList);
+    //   console.log(this.file);
+    //   let formData = new FormData();
+    //   this.fileList.forEach(file => {
+    //     formData.append("files",file.raw);
+    //   });
+    //   let config = {'Content-Type':'multipart/form-data'};
+    //   await this.$http.post("/api8/uploadMultiFile",formData,this.config);
+    // },
+
+    /*判断文件类型*/
+    beforeUpload(file){
+      let fileType = file.name.substring(file.name.lastIndexOf('.')+1);
+      if(fileType !== 'pdf' && fileType !== 'doc' && fileType !== 'docx' && fileType !== 'jpg' && fileType !== 'jpeg'){
+        this.$alert('文件格式错误',{
+          confirmButtonText: '确定',
+          callback: action => {
+            this.fileList = [];
+          }
+        })
+      }
+    },
     // 证据文件上传前数据绑定
     handelUpload(file) {
       this.evidenceData.isImg = file.type == "image/png" ? 1 : 0;

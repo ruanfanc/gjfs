@@ -1,4 +1,4 @@
-module.exports = {
+  module.exports = {
 	lintOnSave: false,
     devServer: {
         proxy: {
@@ -73,9 +73,19 @@ module.exports = {
 			        '^/api7': ''
 			    }
 			},
+          '/api8': {
+            // 此处的写法，目的是为了 将 /api 替换成 https://www.baidu.com/
+            target: 'http://120.24.64.8:8082',
+            // 允许跨域
+            changeOrigin: true,
+            ws: true,
+            pathRewrite: {
+              '^/api8': ''
+            }
+          },
         },
 	//assetsPublicPath: './',
-	
+
 	},
 	  transpileDependencies: [
 	    'vue-echarts',
