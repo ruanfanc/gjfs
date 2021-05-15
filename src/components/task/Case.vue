@@ -447,15 +447,15 @@
           style="margin: 30px;"
           class="upload-demo"
           ref="upload"
-          action="/api8/uploadMultiFile"
-          :http-request="httpRequest"
+          action=""
           multiple
           name="files"
           :file-list="fileList"
           :auto-upload="false"
           list-type="text"
+          :on-change="handleChange"
           :on-preview="handlePreview"
-          :on-success="handelsuccess"
+          :on-success="handelSuccess"
           :before-upload="handelUpload"
         >
           <i class="el-icon-upload"></i>
@@ -593,7 +593,7 @@ export default {
       // console.log(this.token)
       /* var formData = new FormData();
 				formData.append("token",window.sessionStorage.getItem('token')); */
-      const { data: res } = await this.$http.post("/api1/cases/getcase");
+      const {data: res} = await this.$http.post("/api1/cases/getcase");
       if (res.code !== 0) return this.$message.error("获取数据失败！");
       this.nocheck = res.data;
       if (this.nocheck) {
@@ -609,7 +609,7 @@ export default {
         cancelButtonText: "取消"
       }).then(async action => {
         if (action === "confirm") {
-          const { data: res } = await this.$http.put(
+          const {data: res} = await this.$http.put(
             "/api1/examine/passEXamine/" + id
           );
           this.lookevidence(caseId);
@@ -624,7 +624,7 @@ export default {
       this.dialogVisibleNoPass = true;
     },
     async noPassSubmit() {
-      const { data: res } = await this.$http({
+      const {data: res} = await this.$http({
         method: "put",
         url: "/api1/examine/RefuseExamine",
         data: this.noPassForm
@@ -635,7 +635,7 @@ export default {
     },
     // 创建案件
     async submitCaseForm() {
-      const { data: res } = await this.$http.post(
+      const {data: res} = await this.$http.post(
         "/api1/cases/addCase",
         this.newCaseForm
       );
@@ -647,12 +647,12 @@ export default {
       console.log("res", res);
     },
     //导出表格
-    handleDownload(){
+    handleDownload() {
       import('../../vendor/Export2Excel').then(excel => {
-        const tHeader = ['案件编号', '案件名称', '案情描述', '创建时间', '案件类型','重要程度','负责人']
-        const filterVal = ['caseId', 'caseName', 'caseDecription', 'time', 'caseTypeId','importace','staffId']
+        const tHeader = ['案件编号', '案件名称', '案情描述', '创建时间', '案件类型', '重要程度', '负责人']
+        const filterVal = ['caseId', 'caseName', 'caseDecription', 'time', 'caseTypeId', 'importace', 'staffId']
         const list = this.nocheck
-        const data = this.formatJson(filterVal,list)
+        const data = this.formatJson(filterVal, list)
         //console.log(list);
         excel.export_json_to_excel({
           header: tHeader,
@@ -681,7 +681,7 @@ export default {
       setTimeout(() => {
         this.fullscreenLoading = false;
       }, 2000);
-      const { data: res } = await this.$http.get("/api5/scc/insert/get/2");
+      const {data: res} = await this.$http.get("/api5/scc/insert/get/2");
       console.log(res);
       if (res.ok) return this.$message.success("比对成功！");
       return this.$message.error("证据描述被篡改！请联系管理员");
@@ -691,7 +691,7 @@ export default {
     async lookevidence(id) {
       console.log(id);
       this.dialogVisible1 = true;
-      const { data: res } = await this.$http.post(
+      const {data: res} = await this.$http.post(
         "/api1/evidence/getevidence",
         {
           token: this.token,
@@ -717,7 +717,7 @@ export default {
       this.imgurl = "";
       this.fileUrl = "";
       // this.loading = true;
-      const { data: res } = await this.$http.get("/api1/evidence/getone/" + id);
+      const {data: res} = await this.$http.get("/api1/evidence/getone/" + id);
       if (res.code !== 0) {
         this.dialogVisibleinfo = false;
         return this.$message.error("加载失败，请刷新后重试");
@@ -779,43 +779,64 @@ export default {
     },
 
     /*上传文件*/
-    submitUpload() {//点击上传
-      this.$refs.upload.submit();
-    },
-
-    async httpRequest(param){
-      let file = param.file;
-      console.log(file);
-      let formData = new FormData();
-      formData.append('file', file);
-      //let config = {'Content-Type':'multipart/form-data'};
-      await this.$http. post("/api8/uploadMultiFile",formData,{headers:{'Content-Type':'multipart/form-data'}});
-    },
-
-    // async submitUpload(){
-    //   console.log(this.fileList);
-    //   console.log(this.file);
-    //   let formData = new FormData();
-    //   this.fileList.forEach(file => {
-    //     formData.append("files",file.raw);
-    //   });
-    //   let config = {'Content-Type':'multipart/form-data'};
-    //   await this.$http.post("/api8/uploadMultiFile",formData,this.config);
+    // httpRequest(files){
+    //   this.formData.append('file',files.file);
     // },
 
-    /*判断文件类型*/
-    beforeUpload(file){
-      let fileType = file.name.substring(file.name.lastIndexOf('.')+1);
-      if(fileType !== 'pdf' && fileType !== 'doc' && fileType !== 'docx' && fileType !== 'jpg' && fileType !== 'jpeg'){
-        this.$alert('文件格式错误',{
-          confirmButtonText: '确定',
-          callback: action => {
-            this.fileList = [];
-          }
-        })
+    async submitUpload() {
+      if (this.fileList.length === 0) {
+        this.$message.warning('请选取文件');
       }
+      //console.log(this.fileList);
+      const formData = new FormData();
+      this.fileList.forEach((file) => {
+        formData.append('files', file.raw);
+      })
+      // formData.forEach((value, key) => {
+      //   console.log(`key ${key}: value ${value}`);
+      // })
+      await this.$http.post("/api8/uploadMultiFile",formData,{headers:{'Content-Type':'multipart/form-data'}}).then((res)=>{
+        if(res.status === 200){
+          this.$message.success("上传成功！");
+          this.fileList=[];
+        }
+        else{
+          this.$message.error("上传失败！");
+        }
+      })
     },
+
+    // submitUpload() {//点击上传
+    //   this.$refs.upload.submit();
+    // },
+    //
+    // async httpRequest(param){
+    //   let file = param.file;
+    //   console.log(file);
+    //   let formData = new FormData();
+    //   formData.append('file', file);
+    //   //let config = {'Content-Type':'multipart/form-data'};
+    //   await this.$http.post("/api8/uploadMultiFile",formData,{headers:{'Content-Type':'multipart/form-data'}});
+    // },
+
+    //
+    // /*判断文件类型*/
+    // beforeUpload(file){
+    //   let fileType = file.name.substring(file.name.lastIndexOf('.')+1);
+    //   if(fileType !== 'pdf' && fileType !== 'doc' && fileType !== 'docx' && fileType !== 'jpg' && fileType !== 'jpeg'){
+    //     this.$alert('文件格式错误',{
+    //       confirmButtonText: '确定',
+    //       callback: action => {
+    //         this.fileList = [];
+    //       }
+    //     })
+    //   }
+    // },
     // 证据文件上传前数据绑定
+    handleChange(fileList) {
+      this.fileList.push(fileList)
+    },
+
     handelUpload(file) {
       this.evidenceData.isImg = file.type == "image/png" ? 1 : 0;
     },
@@ -824,7 +845,7 @@ export default {
       console.log(file);
     },
 
-    handelsuccess(response) {
+    handelSuccess(response) {
       console.log(this.evidenceData);
       if (response.code == 0) {
         this.dialogVisible2 = false;
