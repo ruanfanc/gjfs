@@ -104,7 +104,7 @@
       </el-table-column>
       <el-table-column prop="staffId" label="负责人"></el-table-column>
 
-      <el-table-column label="操作" width="250">
+      <el-table-column label="操作" width="300">
         <!-- eslint-disable -->
         <template slot-scope="{ row }">
           <el-button
@@ -120,6 +120,13 @@
             size="mini"
             @click="dialogupload(row.caseId)"
             >上传证据</el-button
+          >
+          <el-button
+            v-if="departmentId == 101 || departmentId == 103"
+            type="primary"
+            size="mini"
+            @click="caseDetail(row.caseId)"
+            >案件详情</el-button
           >
 
           <el-button
@@ -272,6 +279,53 @@
         >
       </el-form>
     </el-dialog>
+
+    <!-- 查看案件详情弹框 caseDetail -->
+    <el-dialog title="案件详情" :visible.sync="caseDetailVisiable">
+      <el-form :model="caseDetailForm" :disabled="isEdit" label-position="left" label-width="80px"> 
+        <el-form-item label="案件编号" style="width: 100%;">
+          <el-input v-model="caseDetailForm.caseId" autocomplete="off" type="text"></el-input>
+        </el-form-item>
+        <el-form-item label="案件名称" :label-width="formLabelWidth">
+          <el-input v-model="caseDetailForm.caseName" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="案情描述" :label-width="formLabelWidth">
+          <el-input type="textarea" v-model="caseDetailForm.caseDecription" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="创建时间" >
+          <el-date-picker type="date" placeholder="选择日期" v-model="caseDetailForm.time" style="width: 140px;"></el-date-picker>
+          <!-- <el-input v-model="caseDetailForm.time" autocomplete="off"></el-input> -->
+        </el-form-item>
+        <el-form-item label="案件类型" :label-width="formLabelWidth">
+          <el-radio-group v-model="caseDetailForm.caseTypeId" size="medium">
+                  <el-radio
+                    v-for="(item, index) in caseTypeOptions"
+                    :key="index"
+                    :label="item.value"
+                    :disabled="item.disabled"
+                    >{{ item.label }}
+                  </el-radio>
+                </el-radio-group>
+        </el-form-item>
+        <el-form-item label="重要程度" :label-width="formLabelWidth">
+          <el-radio-group v-model="caseDetailForm.importace" size="medium">
+                  <el-radio :label="0">一般案件</el-radio>
+                  <el-radio :label="1">重案要案</el-radio>
+          </el-radio-group>
+          <!-- <el-input v-model="caseDetailForm.importace" autocomplete="off"></el-input> -->
+        </el-form-item>
+        <el-form-item label="负责人" :label-width="formLabelWidth">
+          <el-input v-model="caseDetailForm.staffId" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="isEdit = false">编 辑</el-button>
+        <el-button @click="caseDetailVisiable = false ,isEdit = true">取 消</el-button>
+        <el-button type="primary" @click="caseDetailVisiable = false ,isEdit = true">确 定</el-button>
+      </div>
+    </el-dialog>
+
+
     <!-- 创建案件弹框 creatCaseDia -->
     <el-dialog title="创建案件" :visible.sync="creatCaseDia" width="70%">
       <span>
@@ -489,6 +543,7 @@ export default {
       pageSize: 10, //每页多少条
       currentPage: 1, // 当前页
       loading: true,
+      isEdit: true,
       listQuery: {
         page: 1,
         limit: 20,
@@ -503,11 +558,14 @@ export default {
       fullscreenLoading: false,
       activeName: "first",
       nocheck: [],
+
+  
       evidence: [],
       noPassForm: {},
       dialogVisible1: false,
       dialogVisible2: false,
       dialogVisibleinfo: false,
+      caseDetailVisiable: false,
       Id: 61232764,
       token: "",
       imgurl: "",
@@ -521,6 +579,16 @@ export default {
         caseId: "",
         token: "",
         note: ""
+      },
+      caseDetailForm: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
       },
       caseTypeOptions: [
         {
@@ -587,6 +655,9 @@ export default {
     console.log("this.departmentId :>> ", this.departmentId);
   },
   methods: {
+
+    
+
     //   获取全部案件
     async noCheck() {
       // this.token = window.sessionStorage.getItem('token')
@@ -622,6 +693,18 @@ export default {
       this.caseId = caseId;
       this.noPassForm.evidenceId = id;
       this.dialogVisibleNoPass = true;
+    },
+    async caseDetail(caseId) {
+      this.caseDetailVisiable = true;
+      const {data: res} = await this.$http({
+        method: "put",
+        url: "/api1/cases/get/" + caseId
+      });
+      if (res.code !== 0) return this.$message.error("获取数据失败！");
+      this.caseDetailForm = res.data;
+      if (this.caseDetailForm) {
+          this.caseDetailForm.time = new Date(Date.parse(this.caseDetailForm.time)).toLocaleDateString();
+      }
     },
     async noPassSubmit() {
       const { data: res } = await this.$http({

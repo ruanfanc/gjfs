@@ -16,7 +16,6 @@ import store from './store'
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
 
-
 //请求根路径
 //axios.defaults.baseURL = 'http://isihon.cn/sc'
 
