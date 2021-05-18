@@ -2,13 +2,7 @@
   <div class="mainbox">
     <!-- 操作按钮 -->
     <div class="filter-container">
-      <!-- <el-input
-        v-model="listQuery.title"
-        placeholder="案件描述"
-        style="width: 200px;"
-        class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
+      <!-- 
       <el-input
         v-model="listQuery.importance"
         placeholder="办案人"
@@ -43,7 +37,14 @@
           :label="item"
           :value="item"
         />
-      </el-select>
+      </el-select>-->
+      <el-input
+        v-model="searchKey"
+        placeholder="请输入案件描述关键词"
+        style="width: 250px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />
       <el-button
         v-waves
         class="filter-item"
@@ -52,7 +53,7 @@
         @click="handleFilter"
       >
         搜索
-      </el-button> -->
+      </el-button> 
       <el-button
         v-if="departmentId == 101 || departmentId == 103"
         class="filter-item"
@@ -539,6 +540,7 @@ export default {
   //inject: ['reload'],
   data() {
     return {
+      searchKey:'',
       fileUrl: "",
       pageSize: 10, //每页多少条
       currentPage: 1, // 当前页
@@ -648,6 +650,18 @@ export default {
       },
       departmentId: ""
     };
+  },
+  watch: {
+    searchKey(value,oldValue){
+      if(value){
+        this.nocheck = this.nocheck.filter((item)=>{
+        return item.caseDecription.includes(value)
+      });
+      }else{
+        this.noCheck();
+      }
+      
+    }
   },
   created() {
     this.noCheck();
