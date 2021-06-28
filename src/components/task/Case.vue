@@ -122,13 +122,13 @@
             @click="dialogupload(row.caseId)"
             >上传证据</el-button
           >
-          <el-button
+          <!-- <el-button
             v-if="departmentId == 101 || departmentId == 103"
             type="primary"
             size="mini"
             @click="caseDetail(row.caseId)"
             >案件详情</el-button
-          >
+          > -->
 
           <el-button
             v-else
@@ -146,6 +146,7 @@
 
 				</el-table-column> -->
     </el-table>
+    <!-- 纯前端分页 -->
     <div class="pagebox">
       <el-pagination
         @size-change="handleSizeChange"
@@ -396,7 +397,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="24">
-              <el-form-item label="可见部门" prop="ids">
+              <el-form-item label="可见部门">
                 <el-checkbox-group v-model="newCaseForm.ids">
                   <el-checkbox
                     v-for="(item, index) in DepartmentIdsOptions"
@@ -467,18 +468,17 @@
             :style="{ width: '100%' }"
           ></el-input>
         </el-form-item>
-        <el-form-item label="可见部门" prop="DepartmentIds">
-          <el-checkbox-group v-model="evidenceData.DepartmentIds">
-            <el-checkbox
-              v-for="(item, index) in DepartmentIdsOptions"
-              :key="index"
-              :label="item.value"
-              :disabled="item.disabled"
-              >{{ item.label }}</el-checkbox
-            >
-          </el-checkbox-group>
+        <el-form-item label="可见部门">         
+          <el-checkbox-group v-model="evidenceData.departmentIds">
+                  <el-checkbox
+                    v-for="(item, index) in DepartmentIdsOptions"
+                    :key="index"
+                    :label="item.value"
+                    :disabled="item.disabled"
+                    >{{ item.label }}</el-checkbox
+                  >
+                </el-checkbox-group>
         </el-form-item>
-
 <!--        <el-upload-->
 <!--          limit="1"-->
 <!--          drag="true"-->
@@ -522,7 +522,7 @@
               >选取文件</el-button
             >
           </div>
-          <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->
+         
         </el-upload>
         <el-button
           style="margin-left: 700px;"
@@ -576,7 +576,7 @@ export default {
         ids: [101]
       },
       evidenceData: {
-        DepartmentIds: [101],
+        departmentIds: [101],
         evidenceId: undefined,
         caseId: "",
         token: "",
@@ -637,14 +637,6 @@ export default {
             required: true,
             message: "请输入证据基本描述",
             trigger: "blur"
-          }
-        ],
-        DepartmentIds: [
-          {
-            type: "array",
-            required: true,
-            message: "请至少选择一个可见部门",
-            trigger: "change"
           }
         ]
       },
@@ -870,7 +862,10 @@ export default {
     dialogupload(caseId) {
       this.dialogVisible2 = true;
       //初始化
-      this.evidenceData = {};
+      this.fileList = [];
+      this.evidenceData.note = '';
+      this.evidenceData.evidenceId = '';
+      this.evidenceData.departmentIds = [101];
       this.evidenceData.caseId = caseId;
       this.evidenceData.token = window.sessionStorage.getItem("token");
     },
