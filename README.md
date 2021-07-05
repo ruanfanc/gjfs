@@ -31,5 +31,3 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### npm -config ls
-聂小兰 测试
-张开翔 测试
