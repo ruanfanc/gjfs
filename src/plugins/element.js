@@ -1,8 +1,49 @@
 import Vue from 'vue'
-import { Button, Form, FormItem, Input ,Message, Container, Header, Aside, Main, Menu, Submenu,
- MenuItemGroup, MenuItem, Breadcrumb, BreadcrumbItem, Card, Dialog,Row, Col,
- TimePicker,Option,Select,InputNumber,Checkbox,CheckboxGroup,Table,TableColumn,Tooltip
- ,Tabs,TabPane,Pagination,Carousel,CarouselItem,RadioGroup,Radio,MessageBox,Timeline,TimelineItem,Divider,Upload,Tag, DatePicker} from 'element-ui'
+import {
+  Button,
+  Form,
+  FormItem,
+  Input,
+  Message,
+  Container,
+  Header,
+  Aside,
+  Main,
+  Menu,
+  Submenu,
+  MenuItemGroup,
+  MenuItem,
+  Breadcrumb,
+  BreadcrumbItem,
+  Card,
+  Dialog,
+  Row,
+  Col,
+  TimePicker,
+  Option,
+  Select,
+  InputNumber,
+  Checkbox,
+  CheckboxGroup,
+  Table,
+  TableColumn,
+  Tooltip,
+  Tabs,
+  TabPane,
+  Pagination,
+  Carousel,
+  CarouselItem,
+  RadioGroup,
+  Radio,
+  MessageBox,
+  Timeline,
+  TimelineItem,
+  Divider,
+  Upload,
+  Tag,
+  DatePicker,
+  Loading
+} from 'element-ui'
 
 Vue.use(Upload)
 Vue.use(Tag)
@@ -50,3 +91,4 @@ Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$prompt = MessageBox.prompt
+Vue.prototype.$loading = Loading

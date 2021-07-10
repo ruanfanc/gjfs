@@ -2,62 +2,19 @@
   <div class="mainbox">
     <!-- 操作按钮 -->
     <div class="filter-container">
-      <!-- 
-      <el-input
-        v-model="listQuery.importance"
-        placeholder="办案人"
-        style="width: 200px;"
-        class="filter-item"
-      >
-      </el-input>
-      <el-select
-        v-model="listQuery.type"
-        placeholder="案件类型"
-        clearable
-        class="filter-item"
-        style="width: 130px"
-      >
-        <el-option
-          v-for="item in calendarTypeOptions"
-          :key="item.key"
-          :label="item.display_name + '(' + item.key + ')'"
-          :value="item.key"
-        />
-      </el-select>
-      <el-select
-        v-model="listQuery.importance"
-        placeholder="重要程度"
-        clearable
-        style="width: 130px"
-        class="filter-item"
-      >
-        <el-option
-          v-for="item in importanceOptions"
-          :key="item"
-          :label="item"
-          :value="item"
-        />
-      </el-select>-->
       <el-input
         v-model="searchKey"
         placeholder="请输入案件描述关键词"
-        style="width: 250px;"
+        style="width: 250px"
         class="filter-item"
-        @keyup.enter.native="handleFilter"
       />
-      <el-button
-        v-waves
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
-      >
+      <el-button class="filter-item" type="primary" icon="el-icon-search">
         搜索
-      </el-button> 
+      </el-button>
       <el-button
         v-if="departmentId == 101 || departmentId == 103"
         class="filter-item"
-        style="margin-left: 10px;"
+        style="margin-left: 10px"
         type="primary"
         icon="el-icon-edit"
         @click="creatCaseDia = true"
@@ -65,7 +22,6 @@
         创建案件
       </el-button>
       <el-button
-
         class="filter-item"
         type="primary"
         icon="el-icon-download"
@@ -156,7 +112,7 @@
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="nocheck.length"
-        style="float:right;margin-top:15px;"
+        style="float: right; margin-top: 15px"
       >
       </el-pagination>
     </div>
@@ -178,10 +134,10 @@
               <el-tag
                 v-else-if="
                   row.examine ==
-                    ('法院审核通过' ||
-                      '检察院审核通过' ||
-                      '司法局审核通过' ||
-                      '公安部门审核通过')
+                  ('法院审核通过' ||
+                    '检察院审核通过' ||
+                    '司法局审核通过' ||
+                    '公安部门审核通过')
                 "
                 type="success"
                 >{{ row.examine }}</el-tag
@@ -238,18 +194,17 @@
     </el-dialog>
     <!-- 详情弹窗 dialogVisibleinfo -->
     <el-dialog title="证据详情" :visible.sync="dialogVisibleinfo" width="70%">
-      <div class="imgbox" v-if="imgurl !== ''">
+      <div class="imgbox">
         <img
-          :src="imgurl"
-          v-if="imgurl !== ''"
-          style="width: 50%;height: auto;"
+          :src="objectUrl"
+          style="width: 70%; height: auto; border: 1px solid #000"
         />
       </div>
-
-      <div class="textbox" v-if="imgurl">
-        <el-button type="success" icon="el-icon-check" circle></el-button>
-        区块链校验通过 <a class="file" :href="fileUrl">点击下载</a>
+      <div class="textbox">
+        <i class="el-icon-success" style="color: green; margin-right:5px"></i>
+        区块链校验通过 <a :href="objectUrl" :download="fileName"> 点击下载</a>
       </div>
+      <div class="textbox">区块HASH：{{blockHash}}</div>
     </el-dialog>
     <!-- 未通过批复弹窗 dialogVisibleNoPass-->
     <el-dialog :visible.sync="dialogVisibleNoPass" width="80%">
@@ -257,7 +212,7 @@
         <el-form-item label="证据编号" prop="evidenceId">
           <el-input
             v-model="noPassForm.evidenceId"
-            disabled="true"
+            disabled
             clearable
             :style="{ width: '100%' }"
           >
@@ -273,7 +228,7 @@
           </el-input>
         </el-form-item>
         <el-button
-          style="margin-left: 10px;"
+          style="margin-left: 10px"
           size="small"
           type="primary"
           @click="noPassSubmit"
@@ -284,49 +239,78 @@
 
     <!-- 查看案件详情弹框 caseDetail -->
     <el-dialog title="案件详情" :visible.sync="caseDetailVisiable">
-      <el-form :model="caseDetailForm" :disabled="isEdit" label-position="left" label-width="80px"> 
-        <el-form-item label="案件编号" style="width: 100%;">
-          <el-input v-model="caseDetailForm.caseId" autocomplete="off" type="text"></el-input>
+      <el-form
+        :model="caseDetailForm"
+        :disabled="isEdit"
+        label-position="left"
+        label-width="80px"
+      >
+        <el-form-item label="案件编号" style="width: 100%">
+          <el-input
+            v-model="caseDetailForm.caseId"
+            autocomplete="off"
+            type="text"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="案件名称" :label-width="formLabelWidth">
-          <el-input v-model="caseDetailForm.caseName" autocomplete="off"></el-input>
+        <el-form-item label="案件名称">
+          <el-input
+            v-model="caseDetailForm.caseName"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="案情描述" :label-width="formLabelWidth">
-          <el-input type="textarea" v-model="caseDetailForm.caseDecription" autocomplete="off"></el-input>
+        <el-form-item label="案情描述">
+          <el-input
+            type="textarea"
+            v-model="caseDetailForm.caseDecription"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="创建时间" >
-          <el-date-picker type="date" placeholder="选择日期" v-model="caseDetailForm.time" style="width: 140px;"></el-date-picker>
+        <el-form-item label="创建时间">
+          <el-date-picker
+            type="date"
+            placeholder="选择日期"
+            v-model="caseDetailForm.time"
+            style="width: 140px"
+          ></el-date-picker>
           <!-- <el-input v-model="caseDetailForm.time" autocomplete="off"></el-input> -->
         </el-form-item>
-        <el-form-item label="案件类型" :label-width="formLabelWidth">
+        <el-form-item label="案件类型">
           <el-radio-group v-model="caseDetailForm.caseTypeId" size="medium">
-                  <el-radio
-                    v-for="(item, index) in caseTypeOptions"
-                    :key="index"
-                    :label="item.value"
-                    :disabled="item.disabled"
-                    >{{ item.label }}
-                  </el-radio>
-                </el-radio-group>
+            <el-radio
+              v-for="(item, index) in caseTypeOptions"
+              :key="index"
+              :label="item.value"
+              :disabled="item.disabled"
+              >{{ item.label }}
+            </el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="重要程度" :label-width="formLabelWidth">
+        <el-form-item label="重要程度">
           <el-radio-group v-model="caseDetailForm.importace" size="medium">
-                  <el-radio :label="0">一般案件</el-radio>
-                  <el-radio :label="1">重案要案</el-radio>
+            <el-radio :label="0">一般案件</el-radio>
+            <el-radio :label="1">重案要案</el-radio>
           </el-radio-group>
           <!-- <el-input v-model="caseDetailForm.importace" autocomplete="off"></el-input> -->
         </el-form-item>
-        <el-form-item label="负责人" :label-width="formLabelWidth">
-          <el-input v-model="caseDetailForm.staffId" autocomplete="off"></el-input>
+        <el-form-item label="负责人">
+          <el-input
+            v-model="caseDetailForm.staffId"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="isEdit = false">编 辑</el-button>
-        <el-button @click="caseDetailVisiable = false ,isEdit = true">取 消</el-button>
-        <el-button type="primary" @click="caseDetailVisiable = false ,isEdit = true">确 定</el-button>
+        <el-button @click="(caseDetailVisiable = false), (isEdit = true)"
+          >取 消</el-button
+        >
+        <el-button
+          type="primary"
+          @click="(caseDetailVisiable = false), (isEdit = true)"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
-
 
     <!-- 创建案件弹框 creatCaseDia -->
     <el-dialog title="创建案件" :visible.sync="creatCaseDia" width="70%">
@@ -444,7 +428,7 @@
         <el-form-item label="案件编号" prop="caseId">
           <el-input
             v-model="evidenceData.caseId"
-            disabled="true"
+            disabled
             clearable
             :style="{ width: '100%' }"
           >
@@ -468,64 +452,43 @@
             :style="{ width: '100%' }"
           ></el-input>
         </el-form-item>
-        <el-form-item label="可见部门">         
+        <el-form-item label="可见部门">
           <el-checkbox-group v-model="evidenceData.departmentIds">
-                  <el-checkbox
-                    v-for="(item, index) in DepartmentIdsOptions"
-                    :key="index"
-                    :label="item.value"
-                    :disabled="item.disabled"
-                    >{{ item.label }}</el-checkbox
-                  >
-                </el-checkbox-group>
+            <el-checkbox
+              v-for="(item, index) in DepartmentIdsOptions"
+              :key="index"
+              :label="item.value"
+              :disabled="item.disabled"
+              >{{ item.label }}</el-checkbox
+            >
+          </el-checkbox-group>
         </el-form-item>
-<!--        <el-upload-->
-<!--          limit="1"-->
-<!--          drag="true"-->
-<!--          style="margin: 30px;"-->
-<!--          class="upload-demo"-->
-<!--          ref="upload"-->
-<!--          action="/api1/evidence/postevidence"-->
-<!--          :multiple="true"-->
-<!--          :on-preview="handlePreview"-->
-<!--          :on-remove="handleRemove"-->
-<!--          :file-list="fileList"-->
-<!--          :auto-upload="false"-->
-<!--          name="evidenceUrl"-->
-<!--          :data="evidenceData"-->
-<!--          list-type="text"-->
-<!--          :on-success="handelsuccess"-->
-<!--          :before-upload="handelUpload"-->
-<!--        >-->
         <el-upload
           drag
-          style="margin: 30px;"
+          style="margin: 30px"
           class="upload-demo"
           ref="upload"
-          action=""
-          multiple
-          name="files"
+          action="/api2/uploadFile"
+          name="fileName"
+          limit:1
           :file-list="fileList"
-          :auto-upload="false"
           list-type="text"
+          :on-remove="handleRemove"
           :on-change="handleChange"
-          :on-preview="handlePreview"
           :on-success="handelSuccess"
-          :before-upload="handelUpload"
         >
           <i class="el-icon-upload"></i>
           <div class="el-upload__text">
-            将文件拖到此处，或<el-button
+            将文件拖到此处，或 &nbsp;<el-button
               slot="trigger"
               size="small"
               type="primary"
               >选取文件</el-button
             >
           </div>
-         
         </el-upload>
         <el-button
-          style="margin-left: 700px;"
+          style="margin-left: 700px"
           type="success"
           @click="submitUpload"
           >提交</el-button
@@ -540,7 +503,7 @@ export default {
   //inject: ['reload'],
   data() {
     return {
-      searchKey:'',
+      searchKey: "",
       fileUrl: "",
       pageSize: 10, //每页多少条
       currentPage: 1, // 当前页
@@ -552,7 +515,7 @@ export default {
         importance: undefined,
         title: undefined,
         type: undefined,
-        sort: "+id"
+        sort: "+id",
       },
       creatCaseDia: false,
       dialogVisibleNoPass: false,
@@ -561,7 +524,6 @@ export default {
       activeName: "first",
       nocheck: [],
 
-  
       evidence: [],
       noPassForm: {},
       dialogVisible1: false,
@@ -573,108 +535,108 @@ export default {
       imgurl: "",
       caseId: "",
       newCaseForm: {
-        ids: [101]
+        ids: [101],
       },
       evidenceData: {
         departmentIds: [101],
         evidenceId: undefined,
         caseId: "",
         token: "",
-        note: ""
+        note: "",
       },
       caseDetailForm: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+        name: "",
+        region: "",
+        date1: "",
+        date2: "",
+        delivery: false,
+        type: [],
+        resource: "",
+        desc: "",
       },
       caseTypeOptions: [
         {
           label: "刑事案件",
-          value: "刑事案件"
+          value: "刑事案件",
         },
         {
           label: "行政案件",
-          value: "行政案件"
+          value: "行政案件",
         },
         {
           label: "民事诉讼",
-          value: "民事诉讼"
-        }
+          value: "民事诉讼",
+        },
       ],
       DepartmentIdsOptions: [
         {
           label: "公安局",
-          value: 101
+          value: 101,
         },
         {
           label: "检察院",
-          value: 102
+          value: 102,
         },
         {
           label: "法院",
-          value: 103
+          value: 103,
         },
         {
           label: "司法局",
-          value: 104
-        }
+          value: 104,
+        },
       ],
       rulesevi: {
         evidenceId: [
           {
             required: true,
             message: "请输入证据编号",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         note: [
           {
             required: true,
             message: "请输入证据基本描述",
-            trigger: "blur"
-          }
-        ]
+            trigger: "blur",
+          },
+        ],
       },
-      departmentId: ""
+      departmentId: "",
+      bolckHash: "",
+      objectUrl: "",
+      fileName: "",
     };
   },
   watch: {
-    searchKey(value,oldValue){
-      if(value){
-        this.nocheck = this.nocheck.filter((item)=>{
-        return item.caseDecription.includes(value)
-      });
-      }else{
+    searchKey(value, oldValue) {
+      if (value) {
+        this.nocheck = this.nocheck.filter((item) => {
+          return item.caseDecription.includes(value);
+        });
+      } else {
         this.noCheck();
       }
-      
-    }
+    },
   },
   created() {
     this.noCheck();
     this.departmentId = window.sessionStorage.getItem("departmentId");
     console.log("this.departmentId :>> ", this.departmentId);
+    this.evidenceLoading = true;
   },
   methods: {
-
-    
-
     //   获取全部案件
     async noCheck() {
       // this.token = window.sessionStorage.getItem('token')
       // console.log(this.token)
       /* var formData = new FormData();
 				formData.append("token",window.sessionStorage.getItem('token')); */
-      const {data: res} = await this.$http.post("/api1/cases/getcase");
+      const { data: res } = await this.$http.post("/api1/cases/getcase");
       if (res.code !== 0) return this.$message.error("获取数据失败！");
       this.nocheck = res.data;
       if (this.nocheck) {
-        this.nocheck.forEach(item => {
+        this.nocheck.forEach((item) => {
           item.time = new Date(Date.parse(item.time)).toLocaleDateString();
         });
       }
@@ -683,10 +645,10 @@ export default {
     async passExamine(id, caseId) {
       this.$confirm("确认通过审核？", "提示", {
         confirmButtonText: "确认",
-        cancelButtonText: "取消"
-      }).then(async action => {
+        cancelButtonText: "取消",
+      }).then(async (action) => {
         if (action === "confirm") {
-          const {data: res} = await this.$http.put(
+          const { data: res } = await this.$http.put(
             "/api1/examine/passEXamine/" + id
           );
           this.lookevidence(caseId);
@@ -702,21 +664,23 @@ export default {
     },
     async caseDetail(caseId) {
       this.caseDetailVisiable = true;
-      const {data: res} = await this.$http({
+      const { data: res } = await this.$http({
         method: "put",
-        url: "/api1/cases/get/" + caseId
+        url: "/api1/cases/get/" + caseId,
       });
       if (res.code !== 0) return this.$message.error("获取数据失败！");
       this.caseDetailForm = res.data;
       if (this.caseDetailForm) {
-          this.caseDetailForm.time = new Date(Date.parse(this.caseDetailForm.time)).toLocaleDateString();
+        this.caseDetailForm.time = new Date(
+          Date.parse(this.caseDetailForm.time)
+        ).toLocaleDateString();
       }
     },
     async noPassSubmit() {
-      const {data: res} = await this.$http({
+      const { data: res } = await this.$http({
         method: "put",
         url: "/api1/examine/RefuseExamine",
-        data: this.noPassForm
+        data: this.noPassForm,
       });
       this.dialogVisibleNoPass = false;
       this.lookevidence(this.caseId);
@@ -724,7 +688,7 @@ export default {
     },
     // 创建案件
     async submitCaseForm() {
-      const {data: res} = await this.$http.post(
+      const { data: res } = await this.$http.post(
         "/api1/cases/addCase",
         this.newCaseForm
       );
@@ -737,31 +701,48 @@ export default {
     },
     //导出表格
     handleDownload() {
-      import('../../vendor/Export2Excel').then(excel => {
-        const tHeader = ['案件编号', '案件名称', '案情描述', '创建时间', '案件类型', '重要程度', '负责人']
-        const filterVal = ['caseId', 'caseName', 'caseDecription', 'time', 'caseTypeId', 'importace', 'staffId']
-        const list = this.nocheck
-        const data = this.formatJson(filterVal, list)
+      import("../../vendor/Export2Excel").then((excel) => {
+        const tHeader = [
+          "案件编号",
+          "案件名称",
+          "案情描述",
+          "创建时间",
+          "案件类型",
+          "重要程度",
+          "负责人",
+        ];
+        const filterVal = [
+          "caseId",
+          "caseName",
+          "caseDecription",
+          "time",
+          "caseTypeId",
+          "importace",
+          "staffId",
+        ];
+        const list = this.nocheck;
+        const data = this.formatJson(filterVal, list);
         //console.log(list);
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: '案件导出'
-        })
-      })
+          filename: "案件导出",
+        });
+      });
     },
     formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => {
-        if (j === 'importace') {
-          if (v[j] == '1') {
-            return v[j] = "重案要案"
-          } else {
-            return v[j] = "一般案件"
+      return jsonData.map((v) =>
+        filterVal.map((j) => {
+          if (j === "importace") {
+            if (v[j] == "1") {
+              return (v[j] = "重案要案");
+            } else {
+              return (v[j] = "一般案件");
+            }
           }
-        }
-        return v[j]
-      }))
-
+          return v[j];
+        })
+      );
     },
 
     // 证据对比
@@ -770,27 +751,27 @@ export default {
       setTimeout(() => {
         this.fullscreenLoading = false;
       }, 2000);
-      const {data: res} = await this.$http.get("/api5/scc/insert/get/2");
+      const { data: res } = await this.$http.get("/api5/scc/insert/get/2");
       console.log(res);
       if (res.ok) return this.$message.success("比对成功！");
       return this.$message.error("证据描述被篡改！请联系管理员");
     },
 
-    /* 查看证据弹窗 */
+    /* 证据链弹窗 */
     async lookevidence(id) {
       console.log(id);
       this.dialogVisible1 = true;
-      const {data: res} = await this.$http.post(
+      const { data: res } = await this.$http.post(
         "/api1/evidence/getevidence",
         {
           token: this.token,
-          caseId: id
+          caseId: id,
         }
       );
 
       this.evidence = res.data;
       //添加caseId
-      this.evidence.forEach(item => {
+      this.evidence.forEach((item) => {
         item.caseId = id;
         item.date = new Date(Date.parse(item.date)).toLocaleDateString();
       });
@@ -802,28 +783,33 @@ export default {
       console.log(id);
 
       // this.dialogVisible1 = false;
-      this.dialogVisibleinfo = true;
-      this.imgurl = "";
-      this.fileUrl = "";
-      // this.loading = true;
-      const {data: res} = await this.$http.get("/api1/evidence/getone/" + id);
-      if (res.code !== 0) {
-        this.dialogVisibleinfo = false;
-        return this.$message.error("加载失败，请刷新后重试");
+      
+      const { data: res } = await this.$http.get("/api1/evidence/getone/" + id);
+      if (res.code === 1001) {
+        return this.$message.error("证据被篡改," + res.msg + ",请联系管理员!");
+      } else if (res.code === 0) {
+        this.dialogVisibleinfo = true;
+        this.$message.success("区块链校验通过！");
+        const { data } = res;
+        this.blockHash = data.blockHash;
+        let url =
+          "/api2/download?fullPath=" + data.evidenceUrl.replace(/\//g, "%2F");
+        await this.$http({
+          url: url,
+          method: "get",
+          data: {},
+          responseType: "blob",
+        }).then((res) => {
+          let fileName =
+            res.headers["content-disposition"].split("filename=")[1];
+          this.downLoadBlobFile(res.data, fileName);
+        });
       }
-      if (res.data.isImg == 0) {
-        this.fileUrl = res.data.evidenceUrl;
-        let blob = new Blob([this.fileUrl], {
-          type:
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        }); // for .xlsx files
-
-        // 通过URL.createObjectURL生成文件路径
-        this.fileUrl = window.URL.createObjectURL(blob);
-      }
-      this.imgurl = "data:image/jpeg;base64," + res.data.evidenceUrl;
-
-      console.log("this.fileUrl :>> ", this.fileUrl);
+    },
+    downLoadBlobFile(blob, fileName) {
+      let URL = window.URL || window.webkitURL;
+      this.objectUrl = URL.createObjectURL(blob);
+      this.fileName = fileName;
     },
 
     /* 确定上传 */
@@ -831,40 +817,18 @@ export default {
       this.dialogVisible2 = false;
       this.$message.success("上传成功！");
     },
+    // 移除文件
+    handleRemove(file, fileList) {
+      console.log("移除", file, fileList);
+    },
 
-    /* 审核通过 */
-    // async pass() {
-    //   this.$confirm("确认通过审核？", "提示", {
-    //     confirmButtonText: "确认",
-    //     cancelButtonText: "取消"
-    //   })
-    //     .then(async action => {
-    //       if (action === "confirm") {
-    //         const { data: res } = await this.$http.post(
-    //           "/api3/basic/examine/success?id=61232764"
-    //         );
-    //         this.noCheck();
-    //         return this.$message.success("审核通过");
-    //       }
-    //     })
-    //     .catch(() => {});
-    // },
-    /* 	handelEvi() {
-				this.$refs['evidenceForm'].validate(async valid => {
-					if (!valid) return
-					// 提交表单
-					await this.$http.post('/api2/police/officePolice/PostEvidence', this.evidenceData)
-					this.dialogVisible2 = false
-					return this.$message.success('上传成功，等待大队长审核')
-				})
-			}, */
     // 打开证据上传弹窗，并绑定caseId
     dialogupload(caseId) {
       this.dialogVisible2 = true;
       //初始化
       this.fileList = [];
-      this.evidenceData.note = '';
-      this.evidenceData.evidenceId = '';
+      this.evidenceData.note = "";
+      this.evidenceData.evidenceId = "";
       this.evidenceData.departmentIds = [101];
       this.evidenceData.caseId = caseId;
       this.evidenceData.token = window.sessionStorage.getItem("token");
@@ -877,25 +841,21 @@ export default {
 
     async submitUpload() {
       if (this.fileList.length === 0) {
-        this.$message.warning('请选取文件');
+        this.$message.warning("请选取文件");
+        return;
       }
-      //console.log(this.fileList);
-      const formData = new FormData();
-      this.fileList.forEach((file) => {
-        formData.append('files', file.raw);
-      })
-      // formData.forEach((value, key) => {
-      //   console.log(`key ${key}: value ${value}`);
-      // })
-      await this.$http.post("/api8/uploadMultiFile",formData,{headers:{'Content-Type':'multipart/form-data'}}).then((res)=>{
-        if(res.status === 200){
-          this.$message.success("上传成功！");
-          this.fileList=[];
-        }
-        else{
-          this.$message.error("上传失败！");
-        }
-      })
+      console.log('this.evidenceData :>> ', this.evidenceData);
+      await this.$http
+        .post("/api1/evidence/postevidence", this.evidenceData)
+        .then((res) => {
+          console.log("res :>> ", res);
+          if (res.status === 200) {
+            this.$message.success("上传成功！");
+            this.fileList = [];
+          } else {
+            this.$message.error("上传失败！");
+          }
+        });
     },
 
     // submitUpload() {//点击上传
@@ -925,28 +885,17 @@ export default {
     //   }
     // },
     // 证据文件上传前数据绑定
-    handleChange(fileList) {
-      this.fileList.push(fileList)
+    handleChange(file, fileList) {
+      this.fileList = fileList.slice(-1);
     },
-
-    handelUpload(file) {
-      this.evidenceData.isImg = file.type == "image/png" ? 1 : 0;
-    },
-
-    handlePreview(file) {
-      console.log(file);
-    },
-
     handelSuccess(response) {
-      console.log(this.evidenceData);
-      if (response.code == 0) {
-        this.dialogVisible2 = false;
-        return this.$message.success("证据已上传至区块链！");
-        // !!bug here
-      } else {
-        this.dialogVisible2 = false;
-        return this.$message.success("证据已上传至区块链！");
+      console.log("response :>> ", response);
+      if (response.code === 0) {
+        let url = "/api2/getHash?path=" + response.path.replace(/\//g, "%2F");
+        this.$http.post(url).then((res) => (this.evidenceData.hash = res.data));
+        this.evidenceData.evidenceUrl = response.path;
       }
+      console.log("this.evidenceData :>> ", this.evidenceData);
     },
 
     // 重置表单
@@ -960,14 +909,24 @@ export default {
     // 当前页
     handleCurrentChange(val) {
       this.currentPage = val;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style>
 .filter-container {
   padding-bottom: 30px;
+}
+.imgbox {
+  display: flex;
+  justify-content: center;
+}
+.textbox {
+  margin: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .text-item {

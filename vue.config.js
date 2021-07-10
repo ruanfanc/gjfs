@@ -4,8 +4,8 @@
         proxy: {
             '/api1': {
                 // 此处的写法，目的是为了 将 /api 替换成 https://www.baidu.com/
-				//http://39.108.13.116:8082
-                target: 'http://139.224.71.83:8082/',
+				// 后台服务器
+                target: 'http://47.106.116.110:8082/',
                 // 允许跨域
                 changeOrigin: true,
                 ws: true,
@@ -14,8 +14,8 @@
                 }
             },
 			'/api2': {
-			    // 此处的写法，目的是为了 将 /api 替换成 https://www.baidu.com/
-			    target: 'http://alvin.world:8080',
+			    // 文件系统服务器
+			    target: 'http://120.24.64.8:8082/',
 			    // 允许跨域
 			    changeOrigin: true,
 			    ws: true,
