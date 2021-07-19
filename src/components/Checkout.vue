@@ -15,7 +15,7 @@
 								<el-input v-model="evidence.caseId" autocomplete="off" placeholder="请输入案件id"></el-input>
 							</el-form-item>
 							<el-form-item label="存证编号" prop="evidenceId">
-								<el-input v-model="evidence.evidenceId" autocomplete="off" placeholder="请输入案件id"></el-input>
+								<el-input v-model="evidence.evidenceId" autocomplete="off" placeholder="请输入存证编号"></el-input>
 							</el-form-item>
 							<el-form-item>
 								<el-button type="primary" @click="submitForm">提交</el-button>
