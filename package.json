@@ -11,7 +11,7 @@
   },
   "main": ".eslintrc.js",
   "dependencies": {
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "echarts": "^5.1.0",
     "element-ui": "^2.4.5",
@@ -21,7 +21,7 @@
     "vue-echarts": "^5.0.0-beta.0",
     "vue-router": "^3.2.0",
     "vuex": "^3.6.2",
-    "xlsx": "^0.16.9"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
