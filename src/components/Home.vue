@@ -58,6 +58,39 @@
           <i class="el-icon-view"></i>
           <span slot="title">实时公示</span>
         </el-menu-item>
+        <el-menu-item  @mouseenter.native="enter" @mouseleave.native="leave">
+          <template slot="title">
+            <i class="el-icon-bell"></i>
+            <span slot="title" class="mesTitle">消息</span>
+          </template>
+          <div class="dropdown" v-show="isShow">
+            <div class="msg-header">
+              <div class="unread-title">未读消息</div>
+              <div class="unread-change">
+                <input type="checkbox">
+                <label for="msg-checkbox">
+                  <span class="label">全部标为已读</span>
+                </label>
+              </div>
+            </div>
+            <div class="msg-main">
+              <ul>
+                <li>
+                  <div class="msg-main-img"><img src="" alt=""></div>
+                  <div class="msg-main-title">来自公安局的消息</div>
+                </li>
+                <li>
+                  <div class="msg-main-img"><img src="" alt=""></div>
+                  <div class="msg-main-title">来自公安局的消息</div>
+                </li>
+              </ul>
+            </div>
+            <div class="msg-footer">
+                <a href="https://www.baidu.com" >查看全部</a>     
+            </div>
+          </div>
+        </el-menu-item>
+        
         <el-submenu index="3">
           <template slot="title">
             <i class="el-icon-user-solid"></i>
@@ -86,7 +119,9 @@ export default {
   data() {
     return {
       isCollapse: false,
-      activePath: ""
+      activePath: "",
+      isShow:true,
+      msgList:[]
     };
   },
   created() {
@@ -106,7 +141,14 @@ export default {
     saveNavState(activePath) {
       window.sessionStorage.setItem("activePath", activePath);
       this.activePath = activePath;
+    },
+    enter(){
+      this.isShow=true;
+    },
+    leave(){
+      this.isShow=false;
     }
+    
   }
 };
 </script>
@@ -138,7 +180,9 @@ export default {
 .spanTitle {
   font-size: 16px;
 }
-
+.mesTitle{
+  font-size:16px;
+}
 .toggle-button {
   background-color: #43495b;
   font-size: 10px;
@@ -151,5 +195,95 @@ export default {
 
 .home-container {
   height: 100%;
+}
+.dropdown{
+  position: absolute;
+  top: 62px;
+  right: -50px;
+  background-color: #fff;
+  width: 300px;
+  height: 500px;
+  box-shadow: 0 2px 10px 0 rgba(185, 182, 182, 0.2);
+  font-size: 14px;
+  border-radius: 10px;
+  z-index: 999;
+  box-sizing:border-box;
+}
+
+.dropdown .msg-header{
+  position: relative;
+  width: 100%;
+  height: 40px;
+  border-bottom:1px solid #ccc ;
+}
+
+.dropdown .msg-header .unread-title{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+}
+.dropdown .msg-header .unread-change{
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+}
+
+.dropdown .msg-main{
+  width: 100%;
+  height: 420px;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+*{
+  padding: 0;
+  margin: 0;
+}
+.msg-main ul li {
+  position: relative;
+  height: 80px;
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+  
+}
+.msg-main ul li .msg-main-img{
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: pink;
+}
+.msg-main ul li .msg-main-title{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 200px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+}
+li {
+  list-style: none;
+
+}
+.dropdown .msg-footer{
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border-top: 1px solid #ccc;
+}
+a{
+  text-decoration: none;
 }
 </style>
