@@ -15,7 +15,7 @@ import Checkout from '../components/Checkout.vue'
 import Case from '../components/task/Case.vue'
 import NoRight from '../components/noRight/noRight.vue'
 import First from '../components/firstpage/firstpage.vue'
-
+import Test from '../components/firstpage/test.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -27,10 +27,15 @@ const routes = [
 		path: '/first',
 			component: First
 		},
+		// {
+		// 	path: '/test',
+		// 	component: Test
+		// },
 	{
 	path: '/login',
 		component: Login
 	},
+
 	{
 		path: '/home',
 		component: Home,
