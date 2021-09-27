@@ -10,6 +10,7 @@
         :rules="loginFormRules"
         label-width="0px"
         class="login_form"
+        @keyup.enter.native="login"
       >
         <el-form-item prop="staffId">
           <el-input
@@ -21,7 +22,7 @@
           <el-input
             v-model="loginForm.password"
             prefix-icon="el-icon-lock"
-            type="password"
+            type="password"            
           ></el-input>
         </el-form-item>
         <el-form-item class="btns">

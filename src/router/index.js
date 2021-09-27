@@ -14,14 +14,20 @@ import Publicity from '../components/Publicity.vue'
 import Checkout from '../components/Checkout.vue'
 import Case from '../components/task/Case.vue'
 import NoRight from '../components/noRight/noRight.vue'
+import First from '../components/firstpage/firstpage.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
 	{
 		path: '/',
-		redirect: '/login'
-	},{
+		redirect: '/first'
+	},
+	{
+		path: '/first',
+			component: First
+		},
+	{
 	path: '/login',
 		component: Login
 	},
