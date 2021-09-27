@@ -28,18 +28,26 @@
         <!-- <el-menu-item style="position: absolute;left: 6%;padding-top: 20px;font-size: 20px;font-weight: bold" >
         公检法司链上存证系统
       </el-menu-item> -->
-
-        <el-menu-item
-          v-for="(item, i) in navList"
-          :key="i"
-          :index="item.name"
-          :style="item.sstyle"
-        >
+      <!-- 循环取出，存储的跳转的网页 -->
+        <!-- <el-menu-item v-for="(item, i) in navList" :key="i" :index="item.name" :style="item.sstyle"        >
           {{ item.navItem }}
+        </el-menu-item> -->
+
+        <el-menu-item v-for="(Item, i) in navList" :key="i"  :style="Item.sstyle" :getindex = "Item.posid" >
+          <!-- {{item.posid}} -->
+          <a v-bind:href= "Item.posid"  @click="jumpto(Item.posid)">{{Item.navItem}}</a>
         </el-menu-item>
-        <el-menu-item index="/login" style="color: #222; float: right"
-          >登陆</el-menu-item
-        >
+      <!-- 锚点的菜单 -->
+         <!-- <el-menu-item  style="position: absolute;left: 70%;">
+          <a href="#contone" @click="Tocontone">1</a>
+         </el-menu-item>
+          <el-menu-item index="/login" style="color: #222; float: right"
+          >登陆</el-menu-item> -->
+
+        <!-- 登录网页的跳转 -->
+        <el-menu-item index="/login" style="color: #222; float: right">
+        登陆
+        </el-menu-item>
         <i
           class="el-icon-menu"
           style="float: left; font-size: 45px; color: #222; padding-top: 8px"
@@ -54,7 +62,7 @@
     <el-main>
       <div class="main">
         <!-- 展示图片，后面考虑轮播 -->
-        <div class="picture" id="#contone2" >
+        <div class="picture" id="#part0" >
           <p class="pictures_show" >
 
           <img 
@@ -63,7 +71,7 @@
           </p>
         </div>
         <!-- 介绍 -->
-        <div class="cardbox" id="contone">
+        <div class="cardbox" id="#part1">
           <div class="title">
             <h1>区块链存证系统介绍</h1>
             <el-divider>BLOCKCHAIN STORAGE SYSTEM INTRODUCTION</el-divider>
@@ -83,8 +91,11 @@
           </div>
           </div>
         </div>
+        <div class="structure" id="#part2">
+
+        </div>
         <!-- 实时展示 -->
-        <public > </public>
+        <public id="#part3"> </public>
       </div>
     </el-main>
 
@@ -114,17 +125,26 @@ export default {
         {
           name: "/first",
           navItem: "首页",
-          sstyle: "position: absolute;left: 70%;",
+          sstyle: "position: absolute;left: 69%;",
+          posid: "#part0",
         },
         {
           name: "/task",
           navItem: "系统介绍",
-          sstyle: "position: absolute;left: 75%;",
+          sstyle: "position: absolute;left: 74%;",
+          posid: "#part1",
+        },
+         {
+          name: "/task",
+          navItem: "系统框架",
+          sstyle: "position: absolute;left: 81%;",
+          posid: "#part2",
         },
         {
           name: "/test",
           navItem: "实时公示",
-          sstyle: "position: absolute;left: 82%;",
+          sstyle: "position: absolute;left: 88%;",
+          posid: "#part3",
         },
 
         // {name: '/noright', navItem: '图书馆'},
@@ -152,10 +172,10 @@ export default {
     BackToTop,
      },
   methods:{
-        Tocontone(){
+        jumpto(index){
       // document.querySelector("#contone2").scrollIntoView(true);
       //  document.getElementsByClassName('#contone').scrollIntoView();
-      document.getElementById("#contone2").scrollIntoView(true);
+      document.getElementById(index).scrollIntoView(true);
     },
 
           gotolink(){
