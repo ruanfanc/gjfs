@@ -1,8 +1,8 @@
 <template>
   <el-container class="home-container">
     <!-- 头部 -->
-    <el-header style="height:66px">
-      <div style="width: 450px; ">
+    <el-header style="height: 66px">
+      <div style="width: 450px">
         <img src="" alt="" />
         <span class="title">公检法司链上存证系统</span>
       </div>
@@ -25,31 +25,6 @@
           <i class="el-icon-menu"></i>
           <span slot="title">案件</span>
         </el-menu-item>
-        <!-- <el-submenu index="2">
-          <template slot="title">
-            <i class="el-icon-menu"></i>
-            <span class="spanTitle">工作台</span>
-          </template>
-          <el-menu-item-group>
-            <el-menu-item index="/case" @click="saveNavState('/case')">
-              案件
-            </el-menu-item>
-            <el-menu-item index="/work" @click="saveNavState('/work')">
-              民警
-            </el-menu-item>
-            <el-menu-item index="/captain" @click="saveNavState('/captain')">
-							<i class="el-icon-user-solid"></i>大队长
-						</el-menu-item>
-						<el-menu-item index="/bigcaptain" @click="saveNavState('/bigcaptain')">
-							<i class="el-icon-user-solid"></i>法制大队
-						</el-menu-item>
-            <el-menu-item index="/leader" @click="saveNavState('/leader')">
-              领导审核
-            </el-menu-item>
-            		<el-menu-item index="/reporter">报警记录</el-menu-item>
-						<el-menu-item index="/people">警员信息</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu> -->
         <el-menu-item index="/checkout">
           <i class="el-icon-document-checked"></i>
           <span>在线验证</span>
@@ -58,12 +33,16 @@
           <i class="el-icon-view"></i>
           <span slot="title">实时公示</span>
         </el-menu-item>
+        <!-- 消息模块 -->
         <el-menu-item  @mouseenter.native="enter" @mouseleave.native="leave">
           <template slot="title">
             <i class="el-icon-bell"></i>
-            <span slot="。" class="mesTitle">消息</span>
+            <span slot="" class="mesTitle">消息</span>
           </template>
+          <!-- 下拉菜单 -->
           <div class="dropdown" v-show="isShow">
+            <div class="jdd"></div>
+            <span class="tri"></span>
             <div class="msg-header">
               <div class="unread-title">未读消息</div>
               <div class="unread-change">
@@ -79,8 +58,10 @@
               </p>
               <ul v-show="!checked">
                 <li v-for="item in msgList" :key="item.id">
-                  <div class="msg-main-title">来自{{item.id}}的消息</div>
-                  <div class="msg-main-time">{{item.sendtime}}</div>
+                  <router-link to="message">
+                    <div class="msg-main-title">来自{{item.id}}的消息</div>
+                    <div class="msg-main-time">{{item.sendtime}}</div>
+                  </router-link>
                 </li>
               </ul>
               <div><el-empty description="123"></el-empty></div>
@@ -90,16 +71,13 @@
             </div>
           </div>
         </el-menu-item>
-        
         <el-submenu index="3">
           <template slot="title">
             <i class="el-icon-user-solid"></i>
             <span class="spanTitle">个人中心</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item @click="logout">
-              退出登录
-            </el-menu-item>
+            <el-menu-item @click="logout"> 退出登录 </el-menu-item>
           </el-menu-item-group>
         </el-submenu>
       </el-menu>
@@ -123,6 +101,7 @@ export default {
       isShow:false,
       msgList:[],
       checked:false
+
     };
   },
   created:function() {
@@ -209,7 +188,7 @@ export default {
 }
 .dropdown{
   position: absolute;
-  top: 62px;
+  top: 70px;
   right: -50px;
   background-color: #fff;
   width: 300px;
@@ -220,7 +199,23 @@ export default {
   z-index: 999;
   box-sizing:border-box;
 }
-
+.dropdown .jdd{
+  position: absolute;
+  left: 0;
+  top: -10px;
+  width: 100%;
+  height: 10px;
+}
+.dropdown .tri {
+  position: absolute;
+  right: 90px;
+  top: -20px;
+  height: 0;
+  width: 0;
+  line-height: 0;
+  border: 10px solid transparent;
+  border-bottom: 10px solid #fff;
+}
 .dropdown .msg-header{
   position: relative;
   width: 100%;
@@ -301,8 +296,8 @@ a{
   height: 50px;
   line-height: 50px;
   text-align: center;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 17px;
+  font-weight: 550;
 }
 
 .msg-main ul li .msg-main-time{
