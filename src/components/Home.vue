@@ -61,32 +61,32 @@
         <el-menu-item  @mouseenter.native="enter" @mouseleave.native="leave">
           <template slot="title">
             <i class="el-icon-bell"></i>
-            <span slot="title" class="mesTitle">消息</span>
+            <span slot="。" class="mesTitle">消息</span>
           </template>
           <div class="dropdown" v-show="isShow">
             <div class="msg-header">
               <div class="unread-title">未读消息</div>
               <div class="unread-change">
-                <input type="checkbox">
                 <label for="msg-checkbox">
-                  <span class="label">全部标为已读</span>
+                  <input type="checkbox" id="msg-checkbox" v-model="checked">
+                  全部标为已读
                 </label>
               </div>
             </div>
             <div class="msg-main">
-              <ul>
-                <li>
-                  <div class="msg-main-img"><img src="" alt=""></div>
-                  <div class="msg-main-title">来自公安局的消息</div>
-                </li>
-                <li>
-                  <div class="msg-main-img"><img src="" alt=""></div>
-                  <div class="msg-main-title">来自公安局的消息</div>
+              <p class="msg-main-none" v-show="msgList.length==0?true:false">
+                暂时没有消息
+              </p>
+              <ul v-show="!checked">
+                <li v-for="item in msgList" :key="item.id">
+                  <div class="msg-main-title">来自{{item.id}}的消息</div>
+                  <div class="msg-main-time">{{item.sendtime}}</div>
                 </li>
               </ul>
+              <div><el-empty description="123"></el-empty></div>
             </div>
             <div class="msg-footer">
-                <a href="https://www.baidu.com" >查看全部</a>     
+                <router-link to="message">查看全部</router-link>    
             </div>
           </div>
         </el-menu-item>
@@ -120,12 +120,14 @@ export default {
     return {
       isCollapse: false,
       activePath: "",
-      isShow:true,
-      msgList:[]
+      isShow:false,
+      msgList:[],
+      checked:false
     };
   },
-  created() {
+  created:function() {
     //	this.activePath = window.sessionStorage.getItem('activePath')
+    this.response()
   },
   methods: {
     async logout() {
@@ -147,10 +149,19 @@ export default {
     },
     leave(){
       this.isShow=false;
-    }
-    
-  }
-};
+    },
+    async response() {
+        var that = this;
+        await this.$http.get('http://denghuolanshan.top:8082/message/user3')
+        .then(function(response) {
+          console.log(response);       
+          that.msgList = response.data;         
+        })
+
+     }
+   }
+}
+
 </script>
 
 <style scoped>
@@ -205,7 +216,7 @@ export default {
   height: 500px;
   box-shadow: 0 2px 10px 0 rgba(185, 182, 182, 0.2);
   font-size: 14px;
-  border-radius: 10px;
+  border-radius: 5px;
   z-index: 999;
   box-sizing:border-box;
 }
@@ -225,6 +236,7 @@ export default {
   height: 40px;
   text-align: center;
   line-height: 40px;
+  font-size: 15px;
 }
 .dropdown .msg-header .unread-change{
   position: absolute;
@@ -234,47 +246,74 @@ export default {
   height: 40px;
   text-align: center;
   line-height: 40px;
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .dropdown .msg-main{
   width: 100%;
   height: 420px;
-  overflow-y: hidden;
-  overflow-x: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.dropdown .msg-main .msg-main-none{
+  position: relative;
+  padding-top: 70px;
+  margin-top: 80px;
+  text-align: center;
+  line-height: 13px;
+}
+.dropdown .msg-main .msg-main-none::before{
+  content: "";
+  position: absolute;
+  top: 13px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 45px;
+  height: 45px;
+  background: url(https://iknowpc.bdimg.com/static/common/widget/js/logic/msg-new/img/i-bell.2ec17fe.png) no-repeat;
+  background-size: contain;
 }
 *{
   padding: 0;
   margin: 0;
+}
+li {
+  list-style: none;
+
+}
+a{
+  text-decoration: none;
 }
 .msg-main ul li {
   position: relative;
   height: 80px;
   width: 100%;
   border-bottom: 1px solid #ccc;
-  
 }
-.msg-main ul li .msg-main-img{
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
-  background-color: pink;
-}
+
 .msg-main ul li .msg-main-title{
   position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
+  left: 0px;
+  transform: translateY(-50%);
   width: 200px;
   height: 50px;
   line-height: 50px;
   text-align: center;
+  font-size: 16px;
+  font-weight: 600;
 }
-li {
-  list-style: none;
 
+.msg-main ul li .msg-main-time{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 150px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  font-size: 13px;
 }
 .dropdown .msg-footer{
   width: 100%;
@@ -282,8 +321,5 @@ li {
   line-height: 40px;
   text-align: center;
   border-top: 1px solid #ccc;
-}
-a{
-  text-decoration: none;
 }
 </style>

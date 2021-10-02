@@ -5,6 +5,7 @@
         </div>
     </div>
 </template>
+
 <style scoped>
 .mainbox {
   padding: 15px;
