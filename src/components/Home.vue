@@ -33,10 +33,43 @@
           <i class="el-icon-view"></i>
           <span slot="title">实时公示</span>
         </el-menu-item>
-
-        <el-menu-item index="/message">
-          <i class="el-icon-bell"></i>
-          <span slot="title">消息</span>
+        <!-- 消息模块 -->
+        <el-menu-item  @mouseenter.native="enter" @mouseleave.native="leave">
+          <template slot="title">
+            <i class="el-icon-bell"></i>
+            <span slot="" class="mesTitle">消息</span>
+          </template>
+          <!-- 下拉菜单 -->
+          <div class="dropdown" v-show="isShow">
+            <div class="jdd"></div>
+            <span class="tri"></span>
+            <div class="msg-header">
+              <div class="unread-title">未读消息</div>
+              <div class="unread-change">
+                <label for="msg-checkbox">
+                  <input type="checkbox" id="msg-checkbox" v-model="checked">
+                  全部标为已读
+                </label>
+              </div>
+            </div>
+            <div class="msg-main">
+              <p class="msg-main-none" v-show="msgList.length==0?true:false">
+                暂时没有消息
+              </p>
+              <ul v-show="!checked">
+                <li v-for="item in msgList" :key="item.id">
+                  <router-link to="message">
+                    <div class="msg-main-title">来自{{item.id}}的消息: {{item.messageinfo}}</div>
+                    <div class="msg-main-time">{{item.sendtime}}</div>
+                  </router-link>
+                </li>
+              </ul>
+              <div><el-empty description="123"></el-empty></div>
+            </div>
+            <div class="msg-footer">
+                <router-link to="message">查看全部</router-link>    
+            </div>
+          </div>
         </el-menu-item>
         <el-submenu index="3">
           <template slot="title">
@@ -65,10 +98,15 @@ export default {
     return {
       isCollapse: false,
       activePath: "",
+      isShow:false,
+      msgList:[],
+      checked:false
+
     };
   },
   created() {
     //	this.activePath = window.sessionStorage.getItem('activePath')
+    this.response()
   },
   methods: {
     async logout() {
@@ -85,8 +123,24 @@ export default {
       window.sessionStorage.setItem("activePath", activePath);
       this.activePath = activePath;
     },
-  },
-};
+    enter(){
+      this.isShow=true;
+    },
+    leave(){
+      this.isShow=false;
+    },
+    async response() {
+        var that = this;
+        await this.$http.get('http://denghuolanshan.top:8082/message/user3')
+        .then(function(response) {
+          console.log(response);       
+          that.msgList = response.data;         
+        })
+
+     }
+   }
+}
+
 </script>
 
 <style scoped>
@@ -116,7 +170,9 @@ export default {
 .spanTitle {
   font-size: 16px;
 }
-
+.mesTitle{
+  font-size:16px;
+}
 .toggle-button {
   background-color: #43495b;
   font-size: 10px;
@@ -129,5 +185,144 @@ export default {
 
 .home-container {
   height: 100%;
+}
+.dropdown{
+  position: absolute;
+  top: 70px;
+  right: -50px;
+  background-color: #fff;
+  width: 300px;
+  height: 500px;
+  box-shadow: 0 2px 10px 0 rgba(185, 182, 182, 0.2);
+  font-size: 14px;
+  border-radius: 5px;
+  z-index: 999;
+  box-sizing:border-box;
+  font-weight: 500;
+}
+.dropdown .jdd{
+  position: absolute;
+  left: 0;
+  top: -10px;
+  width: 100%;
+  height: 10px;
+}
+.dropdown .tri {
+  position: absolute;
+  right: 90px;
+  top: -20px;
+  height: 0;
+  width: 0;
+  line-height: 0;
+  border: 10px solid transparent;
+  border-bottom: 10px solid #fff;
+}
+.dropdown .msg-header{
+  position: relative;
+  width: 100%;
+  height: 40px;
+  border-bottom:1px solid #ccc ;
+}
+
+.dropdown .msg-header .unread-title{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 14px;
+  font-weight: bold;
+}
+.dropdown .msg-header .unread-change{
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  font-weight: 100;
+  font-size: 12px;
+  display: flex;
+  justify-content:center;
+  color: #999999;
+}
+
+.dropdown .msg-main{
+  width: 100%;
+  height: 420px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.dropdown .msg-main .msg-main-none{
+  position: relative;
+  padding-top: 70px;
+  margin-top: 80px;
+  text-align: center;
+  line-height: 13px;
+}
+.dropdown .msg-main .msg-main-none::before{
+  content: "";
+  position: absolute;
+  top: 13px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 45px;
+  height: 45px;
+  background: url(https://iknowpc.bdimg.com/static/common/widget/js/logic/msg-new/img/i-bell.2ec17fe.png) no-repeat;
+  background-size: contain;
+}
+*{
+  padding: 0;
+  margin: 0;
+}
+li {
+  list-style: none;
+
+}
+a{
+  text-decoration: none;
+}
+.msg-main ul li {
+  position: relative;
+  height: 80px;
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+}
+
+.msg-main ul li .msg-main-title{
+  position: absolute;
+  top: 49%;
+  left: 0px;
+  transform: translateY(-50%);
+  width: 220px;
+  height: 60px;
+  white-space: normal;
+  line-height: 24px;
+  margin-left: 20px;
+  font-size: 14px;
+  font-weight: 100;
+}
+
+.msg-main ul li .msg-main-time{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 150px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  font-size: 12px;
+  color: #b3b3b3
+}
+.dropdown .msg-footer{
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border-top: 1px solid #ccc;
+  font-weight: 700;
 }
 </style>
