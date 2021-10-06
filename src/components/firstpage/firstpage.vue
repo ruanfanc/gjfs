@@ -76,7 +76,38 @@
           </div>
         </div>
 
-          <!-- 页面布局介绍 -->
+          <!-- 操作的介绍 -->
+          <div class="actionShow" >
+            <div v-for="(item,id) in sysinfo" :key="id">
+              <div v-if="item.setcolor =='1'">
+                <div class="blackcolor">
+                  <div class="blackpicshow">
+                    <img :src="item.url" alt="">
+                  </div>
+                  <div class="syscontent">
+                    <div class="systitle">{{item.txt}}</div>
+                    <div class="sysmessage">{{item.message}}</div>
+                  </div>
+                </div>
+
+              </div>
+              <div v-else>
+                <div class="whitecolor">
+                    <div class="syscontent2">
+                    <div class="systitle2">{{item.txt}}</div>
+                    <div class="sysmessage2">{{item.message}}</div>
+                  </div>
+                  <div class="whpicshow2">
+                    <img :src="item.url" alt="">
+                  </div>
+
+                </div>
+              </div>
+              
+              </div>
+          </div>
+
+          <!-- 页面布局介绍测试 -->
                                   <!-- <div class="test">
               <img
               src="./main1.png"
@@ -265,6 +296,13 @@ export default {
 
   data() {
     return {
+
+      sysinfo:[
+         {setcolor: "1",url:require("../firstpage/system_introduce/精致设计.png") , txt:"精致设计", message:"在浏览器中，支持将数据动态可视化处理。使用图表来总结复杂的数据，可以确保对关系的理解要比那些混乱的报告或电子表格更快。这提供了一种非常清晰的沟通方式，使业务领导者能够更快地理解和处理他们的信息。大数据可视化工具可以提供实时信息，使公检法司更容易对取证的情况进行评估。"},
+         {setcolor: "0",url:require("../firstpage/system_introduce/便捷管理.png") , txt:"便捷管理", message:"支持查看上传记录，重复使用更方便。支持点击图片大图查看。支持删除图片（仅本地记录），界面干净。"},
+         {setcolor: "1",url:require("../firstpage/system_introduce/简单上链.png") , txt:"简单上链", message:"可以上链实现区块链存证等内容，为了彻底解决上链前数据真假的问题，在数据上链过程中，区块链机不仅会用时间戳记录数据产生时间，同时采用GPS/北斗定位芯片，即位置信息，来记录数据产生服务器所在的经纬度，即同时在时空两个维度证明上链前后数据的真实性。" },
+         {setcolor: "0",url:require("../firstpage/system_introduce/安全验证.png") , txt:"安全验证", message:"对安全存储的上链数据进行查询验证操作，系统中的查询用户分为两种，一种是公检法司的人员，一种是社会公众。其中，对于公众的查询，由上传者在本环节所有上链数据收集完成之后，对外界公开业务进度等明文信息，并将敏感数据与公开数据的分离，保证了系统的安全性。"},
+      ],
       icon:[
         {url:require("../firstpage/icons/存储.png") ,txt:"安全存储"},
         {url:require("../firstpage/icons/分布式.png") ,txt:"分布式存储" },
@@ -679,6 +717,84 @@ juzhong{
     min-width: 1200px;
     padding: 48px 0 54px;
     background: #f6f6f6;
+}
+
+.blackcolor {
+    display: flex;
+    padding: 48px;
+    text-align: left;
+    background: #2e2e2e;
+    overflow: hidden;
+}
+
+.blackpicshow{
+      /* display: flex; */
+    float: left;
+    width: 58.333333333333332%;
+    margin-right: 8.333333333333332%;
+}
+.blackpicshow img{
+    width: 100%;
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+
+}
+.blackpicshow img:hover{
+  transform: scale(1.1);
+}
+ .syscontent{
+    float: left;
+    width: 41.666666666666664%;
+        padding-top: 120px;
+           margin-left: 10px;
+}
+.systitle {
+    color: #4ba2e2;
+    font-size: 50px;
+}
+.sysmessage {
+    color: #fff;
+    margin-top: 20px;
+}
+
+/* 白底介绍 */
+
+
+.whitecolor {
+      display: flex;
+    padding: 48px;
+    text-align: left;
+    background: #fff;
+    overflow: hidden;
+}
+
+.whpicshow2{
+      /* display: flex; */
+    float: left;
+    width: 58.333333333333332%;
+    margin-left: 8.333333333333332%;
+}
+.whpicshow2 img{
+    width: 100%;
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+}
+.whpicshow2 img:hover{
+  transform: scale(1.1);
+}
+ .syscontent2{
+    float: left;
+    width: 41.666666666666664%;
+    padding-top: 120px;
+    margin-right: 10px;
+}
+.systitle2 {
+    color: #4ba2e2;
+    font-size: 50px;
+}
+.sysmessage2 {
+    color:#2e2e2e;
+    margin-top: 20px;
 }
 </style>
 
