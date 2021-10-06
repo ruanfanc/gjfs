@@ -84,8 +84,10 @@
             }
           },
         },
-	//assetsPublicPath: './',
-
+	// assetsPublicPath: './',
+		// build:{
+			
+		// }
 	},
 	  transpileDependencies: [
 	    'vue-echarts',
