@@ -1,7 +1,7 @@
 .DS_Store
 node_modules
 /dist
-/snow
+snow/
 # local env files
 .env.local
 .env.*.local
