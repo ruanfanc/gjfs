@@ -27,7 +27,7 @@
         </el-form-item>
         <el-form-item class="btns">
           <el-button type="primary" @click="login">登录</el-button>
-          <el-button type="info">注册</el-button>
+          <el-button type="info" @click="goback">返回</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -50,6 +50,9 @@ export default {
     };
   },
   methods: {
+    goback(){
+      this.$router.push("/first");
+    },
     login() {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return;

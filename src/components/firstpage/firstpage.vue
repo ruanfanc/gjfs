@@ -16,7 +16,7 @@
 
         <!-- 登录网页的跳转 -->
         <el-menu-item index="/login" style="color: #222; float: right">
-        登陆
+        登录
         </el-menu-item>
         <i
           class="el-icon-menu"
