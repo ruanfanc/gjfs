@@ -36,9 +36,22 @@
       :data="
         nocheck.slice((currentPage - 1) * pageSize, currentPage * pageSize)
       "
+      @selection-change="handleSelectionChange"
+      
+    >
+        <!-- <el-table
+      highlight-current-row
+      :data="
+        nocheck.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+      "
       stripe
       style="width: 100%"
-    >
+    > -->
+    <!-- handleSelectionChange(val) {
+      this.multipleSelection = val;
+    }, -->
+      <el-table-column prop="哈哈哈" type="selection" label="全选按钮"  width="53"/>
+      <!-- <el-table-column label="全选" type="selection" align="center" width="58"> -->
       <el-table-column prop="caseId" label="案件编号"></el-table-column>
       <el-table-column prop="caseName" label="案件名称"></el-table-column>
       <el-table-column
@@ -624,6 +637,7 @@ export default {
     this.departmentId = window.sessionStorage.getItem("departmentId");
     console.log("this.departmentId :>> ", this.departmentId);
     this.evidenceLoading = true;
+    this.fetchData();
   },
   methods: {
     //   获取全部案件
@@ -700,7 +714,7 @@ export default {
       console.log("res", res);
     },
     //导出表格
-    handleDownload() {
+    handleDownload1() {
       import("../../vendor/Export2Excel").then((excel) => {
         const tHeader = [
           "案件编号",
@@ -729,6 +743,56 @@ export default {
           filename: "案件导出",
         });
       });
+    },
+    // 选择的导出
+    fetchData() {
+      this.listLoading = true;
+      fetchList(this.listQuery).then(response => {
+        this.list = response.data.items;
+        this.listLoading = false;
+      });
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    handleDownload() {
+      if (this.multipleSelection.length) {
+        this.downloadLoading = true;
+        import("../../vendor/Export2Excel").then(excel => {
+          const tHeader = [
+          "案件编号",
+          "案件名称",
+          "案情描述",
+          "创建时间",
+          "案件类型",
+          "重要程度",
+          "负责人",
+        ];
+        const filterVal = [
+          "caseId",
+          "caseName",
+          "caseDecription",
+          "time",
+          "caseTypeId",
+          "importace",
+          "staffId",
+        ];
+          const list = this.multipleSelection;
+          const data = this.formatJson(filterVal, list);
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: "案件导出",
+          });
+          this.$refs.multipleTable.clearSelection();
+          this.downloadLoading = false;
+        });
+      } else {
+        this.$message({
+          message: "请最少选择一个案件",
+          type: "warning"
+        });
+      }
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map((v) =>
@@ -940,4 +1004,17 @@ export default {
 .el-table {
   font-size: 10px;
 }
+
+/* 全选的实现
+<style> */
+
+.el-table__header .el-table-column--selection .cell .el-checkbox:after {
+  /* color: #333; */
+  content: "全选";
+  /* font-size: 10px; */
+  /* margin-left: 4px; */
+  /* margin-bottom: 2px; */
+  /* font-weight: bold; */
+}
+
 </style>

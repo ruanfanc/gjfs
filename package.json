@@ -11,17 +11,20 @@
   },
   "main": ".eslintrc.js",
   "dependencies": {
-    "axios": "^0.21.0",
+    "@vue/composition-api": "^1.2.2",
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "echarts": "^5.1.0",
     "element-ui": "^2.4.5",
     "file-saver": "^2.0.5",
     "mockjs": "^1.1.0",
+    "v-fit-columns": "^0.2.0",
     "vue": "^2.6.11",
+    "vue-backtotop": "^1.6.1",
     "vue-echarts": "^5.0.0-beta.0",
     "vue-router": "^3.2.0",
     "vuex": "^3.6.2",
-    "xlsx": "^0.16.9"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
