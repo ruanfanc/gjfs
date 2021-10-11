@@ -89,7 +89,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
-	routes
+  routes
 })
 
 //登录权限管理
