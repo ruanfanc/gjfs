@@ -40,7 +40,7 @@
             <span slot="" class="mesTitle">消息</span>
           </template>
           <!-- 下拉菜单 -->
-      
+          <transition name="slide-fade">
           <div class="dropdown" v-show="isShow">
             <div class="jdd"></div>
             <span class="tri"></span>
@@ -72,7 +72,7 @@
                 <router-link to="message">查看全部</router-link>    
             </div>
           </div>
-          
+          </transition>
         </el-menu-item>
         <el-submenu index="3">
           <template slot="title">
@@ -153,6 +153,16 @@ export default {
 </script>
 
 <style scoped>
+.slide-fade-enter-active {
+  transition: all .5s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateY(10px);
+  opacity: 0;
+}
 .el-header {
   background-color: #fff;
   display: flex;
