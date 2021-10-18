@@ -15,12 +15,13 @@ import store from './store'
 }) */
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
+Vue.prototype.$eventBus = new Vue()
 
 //请求根路径
 //axios.defaults.baseURL = 'http://isihon.cn/sc'
 
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+    router,
+    store,
+    render: h => h(App)
 }).$mount('#app')
