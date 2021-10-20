@@ -59,7 +59,7 @@
                 暂时没有消息
               </p>
               <ul v-show="!checked">
-                <li v-for="item in msgList" :key="item.id">
+                <li v-for="(item,index) in msgList" :key="item.id" @click="sendIndex(index)">
                   <router-link to="message">
                     <div class="msg-main-title">来自{{item.id}}的消息</div>
                     <div class="msg-main-time">{{item.sendtime}}</div>
@@ -96,7 +96,6 @@
 </template>
 
 <script>
-//import bus from '../../eventBus.js'
 
 export default {
   data() {
@@ -113,7 +112,7 @@ export default {
     this.response()  
   },
   updated(){
-    this.send() //消息列表数据更新完毕后触发
+    this.sendMsgList() //消息列表数据更新完毕后触发
   },
   methods: {
     async logout() {
@@ -144,9 +143,12 @@ export default {
           console.log(that.msgList)
         })
      },
-    send(){ 
-      this.$eventBus.$emit('share',this.msgList) //eventBus实现兄弟组件之间数据共享，向message.vue发送接口收到的数据
-     }
+    sendMsgList(){ 
+      this.$eventBus.$emit('shareMsgList',this.msgList) //eventBus实现兄弟组件之间数据共享，向message.vue发送接口收到的数据
+     },
+    sendIndex(val){
+      this.$eventBus.$emit('shareIndex',val)
+    }
    }
 }
 
