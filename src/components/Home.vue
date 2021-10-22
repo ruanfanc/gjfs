@@ -34,12 +34,13 @@
           <span slot="title">实时公示</span>
         </el-menu-item>
         <!-- 消息模块 -->
-        <el-menu-item  @mouseenter.native="enter" @mouseleave.native="leave">
+        <el-menu-item @mouseenter.native="enter" @mouseleave.native="leave">
           <template slot="title">
             <i class="el-icon-bell"></i>
             <span slot="" class="mesTitle">消息</span>
           </template>
           <!-- 下拉菜单 -->
+          <transition name="slide-fade">
           <div class="dropdown" v-show="isShow">
             <div class="jdd"></div>
             <span class="tri"></span>
@@ -53,11 +54,12 @@
               </div>
             </div>
             <div class="msg-main">
-              <p class="msg-main-none" v-show="msgList.length==0?true:false">
+              <!-- 当消息列表为空或者点击全部标为已读后，显示无消息状态 -->
+              <p class="msg-main-none" v-show="msgList.length==0?true:false||checked">
                 暂时没有消息
               </p>
               <ul v-show="!checked">
-                <li v-for="item in msgList" :key="item.id">
+                <li v-for="(item,index) in msgList" :key="item.id" @click="sendIndex(index)">
                   <router-link to="message">
                     <div class="msg-main-title">来自{{item.id}}的消息: {{item.messageinfo}}</div>
                     <div class="msg-main-time">{{item.sendtime}}</div>
@@ -70,6 +72,7 @@
                 <router-link to="message">查看全部</router-link>    
             </div>
           </div>
+          </transition>
         </el-menu-item>
         <el-submenu index="3">
           <template slot="title">
@@ -93,20 +96,23 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
       isCollapse: false,
       activePath: "",
-      isShow:false,
       msgList:[],
-      checked:false
-
+      checked:false,
+      isShow:false
     };
   },
-  created() {
+  created(){
     //	this.activePath = window.sessionStorage.getItem('activePath')
-    this.response()
+    this.response()  
+  },
+  updated(){
+    this.sendMsgList() //消息列表数据更新完毕后触发
   },
   methods: {
     async logout() {
@@ -132,18 +138,33 @@ export default {
     async response() {
         var that = this;
         await this.$http.get('http://denghuolanshan.top:8082/message/user3')
-        .then(function(response) {
-          console.log(response);       
-          that.msgList = response.data;         
+        .then(function(response) {       
+          that.msgList = response.data;
+          console.log(that.msgList)
         })
-
-     }
+     },
+    sendMsgList(){ 
+      this.$eventBus.$emit('shareMsgList',this.msgList) //eventBus实现兄弟组件之间数据共享，向message.vue发送接口收到的数据
+     },
+    sendIndex(val){
+      this.$eventBus.$emit('shareIndex',val)
+    }
    }
 }
 
 </script>
 
 <style scoped>
+.slide-fade-enter-active {
+  transition: all .5s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateY(10px);
+  opacity: 0;
+}
 .el-header {
   background-color: #fff;
   display: flex;
