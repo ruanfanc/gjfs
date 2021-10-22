@@ -59,7 +59,7 @@
                 暂时没有消息
               </p>
               <ul v-show="!checked">
-                <li v-for="(item,index) in msgList" :key="item.id" @click="sendIndex(index)">
+                <li v-for="(item,index) in msgList" :key="item.id" @click="sendIndex(index)" v-show="!item.readornot">
                   <router-link to="message">
                     <div class="msg-main-title">来自{{item.id}}的消息</div>
                     <div class="msg-main-time">{{item.sendtime}}</div>
@@ -103,16 +103,19 @@ export default {
       isCollapse: false,
       activePath: "",
       msgList:[],
-      checked:false,
-      isShow:false
+      checked:false,  //点击全部标为已读赋值为true，为true时不展示未读消息内容
+      isShow:false,
+
     };
   },
   created(){
     //	this.activePath = window.sessionStorage.getItem('activePath')
     this.response()  
+
   },
   updated(){
-    this.sendMsgList() //消息列表数据更新完毕后触发
+    this.sendMsgList()
+ //消息列表数据更新完毕后触发
   },
   methods: {
     async logout() {
@@ -147,7 +150,7 @@ export default {
       this.$eventBus.$emit('shareMsgList',this.msgList) //eventBus实现兄弟组件之间数据共享，向message.vue发送接口收到的数据
      },
     sendIndex(val){
-      this.$eventBus.$emit('shareIndex',val)
+      this.$eventBus.$emit('shareIndex',val)//发送当前这条未读消息的索引
     }
    }
 }

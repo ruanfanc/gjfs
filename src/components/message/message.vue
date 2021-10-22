@@ -13,14 +13,14 @@
     <div class="middle-unread" v-show="isShowUnread">
         <div class="aside">
           <ul>
-              <li v-for="(item,index) in List" :key="item.id" ref="bgc" @click="change(index,List.length)" @mouseenter="showBgc(index)" @mouseleave="hideBgc(index)">
-                <div class="el-icon-close"></div>
+              <li v-for="(item,index) in unReadList" :key="item.id" ref="bgc" @click="change(index,unReadList.length)" @mouseenter="showBgc(index)" @mouseleave="hideBgc(index)">
+                <div class="el-icon-close" @click="del(index)"></div>
                 <div class="aside-title" >来自{{item.id}}的消息</div>
               </li>
           </ul>
         </div>
         <div class="main">
-          <div class="content">{{List[num].messageinfo}}</div>
+          <div class="content">{{unReadList[num].messageinfo}}</div>
         </div>
     </div>
     <div class="middle-all" v-show="isShowAll">
@@ -60,43 +60,56 @@
 export default({
   data(){
     return{
-      List:[],
-      num:0,
+      
+      List:[],//未读消息列表
+      num:0,//接受点击下拉菜单中的某一条消息的索引号
       count:0,
       clicked:false,
-      isShowUnread:true,
-      isShowAll:false,
-      isShowHidden:false,
-      currentPage:1, 
-      pagesize:5,
-      index:1 
+      isShowUnread:false,//isShowUnread和isShowAll实现未读消息和全部消息内容的切换
+      isShowAll:true,
+      isShowHidden:false,//为true显示遮罩层，为false隐藏遮罩层
+      currentPage:1, //点击页面的索引号
+      pagesize:5,//一页展示几条消息
+      index:1, //当前页面的索引号,
+      unReadList: []
+
     } 
   },
   created(){
+    
     this.$eventBus.$on('shareMsgList',(val)=>{    //eventBus实现兄弟组件之间数据共享
+      
       this.List=val;
-    })
+      this.unReadList = val.filter((item) => item.readornot == false)
+      console.log(this.unReadList,'777');
+    }),
     this.$eventBus.$on('shareIndex',(val)=>{
       this.num=val;
+      this.isShowUnread=true
+      this.isShowAll=false
+      this.$refs.unread.style.color="#666"
+      this.$refs.all.style.color="#ccc"
       this.$refs.bgc[val].style.backgroundColor="#eee"
     })
+    /*this.allList=this.allList.concat(this.List)
+    console.log(this.allList)*/
   },
+  /*updated(){
+    //将未读消息列表拼接到全部消息列表里
+    this.allList=this.allList.concat(this.List)
+    console.log(this.allList)
+  },*/
   methods:{
+    //实现点击页面号进行跳转
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
-      this.currentPage = val;
+      this.currentPage = val;//将点击的页面号赋值给currentPage
       const ul=this.$refs.ul;
-      if(this.currentPage>this.index){
-        const target=-this.$refs.list.offsetHeight*(this.currentPage-this.index);
-        ul.style.top = ul.offsetTop + target + 'px';
-        this.index=this.currentPage;
-      }
-      else if(this.currentPage<this.index){
-        const target=-this.$refs.list.offsetHeight*(this.currentPage-this.index);
-        ul.style.top = ul.offsetTop + target + 'px';
-        this.index=this.currentPage;
-      }
+      const target=-this.$refs.list.offsetHeight*(this.currentPage-this.index);
+      ul.style.top = ul.offsetTop + target + 'px';
+      this.index=this.currentPage;
     },
+    //实现点击“>”跳转到下一页
     handleNextClick(){
       const ul=this.$refs.ul;
       const target=-this.$refs.list.offsetHeight;
@@ -104,6 +117,7 @@ export default({
       this.index++;
       console.log(this.index);
     },
+    //实现点击“<”跳转到上一页
     handlePrevClick(){
       const ul=this.$refs.ul;
       const target=this.$refs.list.offsetHeight;     
@@ -111,21 +125,23 @@ export default({
       this.index--;
       console.log(this.index);
     },
+    //点击切换未读消息列表的消息，展示不同的样式及内容
     change(val,len){
       this.num=val
-      this.clicked=true
+      //this.clicked=true
       for(var i=0;i<len;i++){
         this.$refs.bgc[i].style.backgroundColor="#fff"
       }
       this.$refs.bgc[val].style.backgroundColor="#eee" //排他算法实现点击选中的小li背景颜色加深，其他小li颜色不变
       console.log(this.clicked);
     },
+    //鼠标经过背景颜色加深，并实现小叉号的移出
     showBgc(val){
       console.log(this.clicked)
       if(this.clicked==false){
       this.$refs.bgc[val].style.backgroundColor="#eee"
       }
-      /*var bgc=this.$refs.bgc;
+      let bgc=this.$refs.bgc;
       clearInterval(bgc[val].timer);
       bgc[val].timer = setInterval(function() {       
         let step = (50 - bgc[val].offsetLeft) / 10;
@@ -134,8 +150,9 @@ export default({
             clearInterval(bgc[val].timer);           
         }        
         bgc[val].style.left = bgc[val].offsetLeft + step + 'px';
-    }, 30);*/
+    }, 30);
     },
+    //鼠标离开背景颜色变浅，并实现小叉号的移出
     hideBgc(val){
       console.log(this.clicked)
       if(this.clicked){
@@ -143,26 +160,46 @@ export default({
       }else{
         this.$refs.bgc[val].style.backgroundColor="#fff"
       }
+      let bgc=this.$refs.bgc;
+      clearInterval(bgc[val].timer);
+      bgc[val].timer = setInterval(function() {       
+        let step = (0-bgc[val].offsetLeft) / 10;
+        step = step > 0 ? Math.ceil(step) : Math.floor(step);
+        if (bgc[val].offsetLeft == -50) {           
+            clearInterval(bgc[val].timer);           
+        }        
+        bgc[val].style.left = bgc[val].offsetLeft + step + 'px';
+    }, 30);
     },
+    //点击未读消息展示未读消息模块
     showUnread(){
         this.isShowAll=!this.isShowAll
         this.isShowUnread=!this.isShowUnread
         this.$refs.all.style.color="#ccc"
         this.$refs.unread.style.color="#666"
     },
+    //点击全部消息展示全部消息模块
     showAll(){
         this.isShowAll=!this.isShowAll
         this.isShowUnread=!this.isShowUnread
         this.$refs.unread.style.color="#ccc"
         this.$refs.all.style.color="#666"
     },
+    //点击全部消息模块的某条消息展示其内容
     showDetail(val){
         this.count=val
         this.isShowHidden=true
     },
+    //点击遮罩层区域隐藏其内容
     hideDetail(){
         this.isShowHidden=false
+    },
+    //点击小叉号删除列表内容
+    del(val){
+        this.unReadList.splice(val,1)
+        //
     }
+
   }
 })
 </script>
@@ -233,6 +270,7 @@ li {
   text-align: center;
   line-height: 55px;
   cursor: pointer;
+  color: #ccc;
 }
 .header .all{
   float: left;
@@ -242,7 +280,6 @@ li {
   text-align: center;
   line-height: 55px;
   cursor: pointer;
-  color: #ccc;
 }
 .middle-unread{
   position: relative;
@@ -278,11 +315,17 @@ li {
   top: 50%;
   left: -50px;
   transform: translateY(-50%);
-  z-index: 2;
+  z-index: 999;
   width: 50px;
-  height: 100%;
+  height: 50px;
+  border-top: 1px solid #ccc;
+  box-sizing: content-box;
   text-align: center;
   line-height: 50px;
+  float: left;
+}
+.aside ul li:first-child .el-icon-close{
+  border-top: none;
 }
 .aside ul li .el-icon-close:hover{
   color: #ccc;
