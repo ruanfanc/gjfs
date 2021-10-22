@@ -61,7 +61,7 @@
               <ul v-show="!checked">
                 <li v-for="(item,index) in msgList" :key="item.id" @click="sendIndex(index)">
                   <router-link to="message">
-                    <div class="msg-main-title">来自{{item.id}}的消息</div>
+                    <div class="msg-main-title">来自{{item.id}}的消息: {{item.messageinfo}}</div>
                     <div class="msg-main-time">{{item.sendtime}}</div>
                   </router-link>
                 </li>
@@ -219,6 +219,7 @@ export default {
   border-radius: 5px;
   z-index: 999;
   box-sizing:border-box;
+  font-weight: 500;
 }
 .dropdown .jdd{
   position: absolute;
@@ -252,7 +253,8 @@ export default {
   height: 40px;
   text-align: center;
   line-height: 40px;
-  font-size: 15px;
+  font-size: 14px;
+  font-weight: bold;
 }
 .dropdown .msg-header .unread-change{
   position: absolute;
@@ -262,8 +264,11 @@ export default {
   height: 40px;
   text-align: center;
   line-height: 40px;
-  font-weight: 600;
-  font-size: 14px;
+  font-weight: 100;
+  font-size: 12px;
+  display: flex;
+  justify-content:center;
+  color: #999999;
 }
 
 .dropdown .msg-main{
@@ -310,15 +315,16 @@ a{
 
 .msg-main ul li .msg-main-title{
   position: absolute;
-  top: 50%;
+  top: 49%;
   left: 0px;
   transform: translateY(-50%);
-  width: 200px;
-  height: 50px;
-  line-height: 50px;
-  text-align: center;
-  font-size: 17px;
-  font-weight: 550;
+  width: 220px;
+  height: 60px;
+  white-space: normal;
+  line-height: 24px;
+  margin-left: 20px;
+  font-size: 14px;
+  font-weight: 100;
 }
 
 .msg-main ul li .msg-main-time{
@@ -329,7 +335,8 @@ a{
   height: 30px;
   text-align: center;
   line-height: 30px;
-  font-size: 13px;
+  font-size: 12px;
+  color: #b3b3b3
 }
 .dropdown .msg-footer{
   width: 100%;
@@ -337,5 +344,6 @@ a{
   line-height: 40px;
   text-align: center;
   border-top: 1px solid #ccc;
+  font-weight: 700;
 }
 </style>
