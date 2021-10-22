@@ -315,16 +315,17 @@ a{
 
 .msg-main ul li .msg-main-title{
   position: absolute;
-  top: 49%;
+  top: 40%;
   left: 0px;
   transform: translateY(-50%);
   width: 220px;
-  height: 60px;
+  height: 48px;
   white-space: normal;
   line-height: 24px;
   margin-left: 20px;
   font-size: 14px;
   font-weight: 100;
+  overflow: hidden;
 }
 
 .msg-main ul li .msg-main-time{
