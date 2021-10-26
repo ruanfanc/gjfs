@@ -55,13 +55,13 @@
             </div>
             <div class="msg-main">
               <!-- 当消息列表为空或者点击全部标为已读后，显示无消息状态 -->
-              <p class="msg-main-none" v-show="msgList.length==0?true:false||checked">
+              <p class="msg-main-none" v-show="unReadmsgList.length==0?true:false||checked">
                 暂时没有消息
               </p>
               <ul v-show="!checked">
-                <li v-for="(item,index) in msgList" :key="item.id" @click="sendIndex(index)" v-show="!item.readornot">
+                <li v-for="(item,index) in unReadmsgList" :key="item.uuid" @click="sendIndex(index)" v-show="!item.readornot">
                   <router-link to="message">
-                    <div class="msg-main-title">来自{{item.id}}的消息: {{item.messageinfo}}</div>
+                    <div class="msg-main-title" :title="item.messageinfo">来自{{item.id}}的消息: {{item.messageinfo}}</div>
                     <div class="msg-main-time">{{item.sendtime}}</div>
                   </router-link>
                 </li>
@@ -69,7 +69,9 @@
               <div><el-empty description="123"></el-empty></div>
             </div>
             <div class="msg-footer">
-                <router-link to="message">查看全部</router-link>    
+                <div class="msg-footer-route">
+                  <router-link to="message">查看全部</router-link>
+                </div>    
             </div>
           </div>
           </transition>
@@ -103,6 +105,7 @@ export default {
       isCollapse: false,
       activePath: "",
       msgList:[],
+      unReadmsgList:[],
       checked:false,  //点击全部标为已读赋值为true，为true时不展示未读消息内容
       isShow:false,
 
@@ -111,7 +114,6 @@ export default {
   created(){
     //	this.activePath = window.sessionStorage.getItem('activePath')
     this.response()  
-
   },
   updated(){
     this.sendMsgList()
@@ -140,17 +142,29 @@ export default {
     },
     async response() {
         var that = this;
-        await this.$http.get('http://denghuolanshan.top:8082/message/user3')
+        await this.$http.get('http://denghuolanshan.top:8082/messagecommunication/user1')
         .then(function(response) {       
-          that.msgList = response.data;
+          that.msgList = response.data.data
+          that.unReadmsgList=that.msgList.filter((item) => item.readornot == false)
           console.log(that.msgList)
+          console.log(that.unReadmsgList);
         })
      },
     sendMsgList(){ 
       this.$eventBus.$emit('shareMsgList',this.msgList) //eventBus实现兄弟组件之间数据共享，向message.vue发送接口收到的数据
+      this.$eventBus.$emit('shareUnMsgList',this.unReadmsgList)
      },
     sendIndex(val){
       this.$eventBus.$emit('shareIndex',val)//发送当前这条未读消息的索引
+      this.$http.put('http://denghuolanshan.top:8082/messagecommunication',{
+            "messageinfo": `${this.unReadmsgList[val].messageinfo}`,
+            "id": "user1",
+            "icon": "usericon",
+            "sendtime": `${this.unReadmsgList[val].sendtime}`,
+            "readornot": true,
+            "sendto": null,
+            "uuid": `${this.unReadmsgList[val].uuid}`
+        })
     }
    }
 }
@@ -322,12 +336,13 @@ a{
   left: 0px;
   transform: translateY(-50%);
   width: 220px;
-  height: 60px;
+  height: 25px;
   white-space: normal;
   line-height: 24px;
   margin-left: 20px;
   font-size: 14px;
   font-weight: 100;
+  overflow: hidden;
 }
 
 .msg-main ul li .msg-main-time{
@@ -342,11 +357,22 @@ a{
   color: #b3b3b3
 }
 .dropdown .msg-footer{
+  position: relative;
   width: 100%;
   height: 40px;
   line-height: 40px;
   text-align: center;
   border-top: 1px solid #ccc;
   font-weight: 700;
+}
+.dropdown .msg-footer .msg-footer-route{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 56px;
+  height: 20px;
+  text-align: center;
+  line-height: 20px;
 }
 </style>

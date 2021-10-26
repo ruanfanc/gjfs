@@ -13,8 +13,8 @@
     <div class="middle-unread" v-show="isShowUnread">
         <div class="aside">
           <ul>
-              <li v-for="(item,index) in unReadList" :key="item.id" ref="bgc" @click="change(index,unReadList.length)" @mouseenter="showBgc(index)" @mouseleave="hideBgc(index)">
-                <div class="el-icon-close" @click="del(index)"></div>
+              <li v-for="(item,index) in unReadList" :key="item.uuid" ref="bgc" @click="change(index,unReadList.length)" @mouseenter="showBgc(index)" @mouseleave="hideBgc(index)">
+                <div class="el-icon-close" @click="del(item.uuid)"></div>
                 <div class="aside-title" >来自{{item.id}}的消息</div>
               </li>
           </ul>
@@ -26,7 +26,7 @@
     <div class="middle-all" v-show="isShowAll">
       <div class="list" ref="list">
          <ul ref="ul">
-          <li v-for="(item,index) in List" :key="item.sendtime" @click="showDetail(index)">
+          <li v-for="(item,index) in List" :key="item.uuid" @click="showDetail(index)">
             <div class="list-title" >             
               来自{{item.id}}的消息
             </div>
@@ -60,7 +60,7 @@
 export default({
   data(){
     return{
-      
+      unReadList: [],
       List:[],//未读消息列表
       num:0,//接受点击下拉菜单中的某一条消息的索引号
       count:0,
@@ -70,35 +70,32 @@ export default({
       isShowHidden:false,//为true显示遮罩层，为false隐藏遮罩层
       currentPage:1, //点击页面的索引号
       pagesize:5,//一页展示几条消息
-      index:1, //当前页面的索引号,
-      unReadList: []
-
+      index:1, //当前页面的索引号
     } 
   },
   created(){
     
-    this.$eventBus.$on('shareMsgList',(val)=>{    //eventBus实现兄弟组件之间数据共享
-      
-      this.List=val;
-      this.unReadList = val.filter((item) => item.readornot == false)
-      console.log(this.unReadList,'777');
+    this.$eventBus.$on('shareMsgList',(val)=>{    //eventBus实现兄弟组件之间数据共享      
+      this.List=val;     
+      console.log(this.List,'全部');      
+    }),
+    this.$eventBus.$on('shareUnMsgList',(val)=>{    //eventBus实现兄弟组件之间数据共享          
+      this.unReadList = val    
+      console.log(this.unReadList,'未读');
     }),
     this.$eventBus.$on('shareIndex',(val)=>{
       this.num=val;
+      this.unReadList[val].readornot=true
       this.isShowUnread=true
       this.isShowAll=false
       this.$refs.unread.style.color="#666"
       this.$refs.all.style.color="#ccc"
+       for(var i=0;i<this.unReadList.length;i++){
+        this.$refs.bgc[i].style.backgroundColor="#fff"
+      }
       this.$refs.bgc[val].style.backgroundColor="#eee"
     })
-    /*this.allList=this.allList.concat(this.List)
-    console.log(this.allList)*/
   },
-  /*updated(){
-    //将未读消息列表拼接到全部消息列表里
-    this.allList=this.allList.concat(this.List)
-    console.log(this.allList)
-  },*/
   methods:{
     //实现点击页面号进行跳转
     handleCurrentChange(val) {
@@ -128,17 +125,27 @@ export default({
     //点击切换未读消息列表的消息，展示不同的样式及内容
     change(val,len){
       this.num=val
-      //this.clicked=true
+      this.unReadList[val].readornot=true
+      this.$http.put('http://denghuolanshan.top:8082/messagecommunication',{
+            "messageinfo": `${this.unReadList[val].messageinfo}`,
+            "id": "user1",
+            "icon": "usericon",
+            "sendtime": `${this.unReadList[val].sendtime}`,
+            "readornot": true,
+            "sendto": null,
+            "uuid": `${this.unReadList[val].uuid}`
+        })
       for(var i=0;i<len;i++){
         this.$refs.bgc[i].style.backgroundColor="#fff"
       }
-      this.$refs.bgc[val].style.backgroundColor="#eee" //排他算法实现点击选中的小li背景颜色加深，其他小li颜色不变
-      console.log(this.clicked);
+      this.$refs.bgc[val].style.backgroundColor="#eee" //排他算法实现点击选中的小li背景颜色加深，其他小li颜色不变     
+      console.log(this.unReadList[val].readornot);
     },
     //鼠标经过背景颜色加深，并实现小叉号的移出
     showBgc(val){
-      console.log(this.clicked)
-      if(this.clicked==false){
+      console.log(this.unReadList[val].readornot)
+      this.clicked=this.unReadList[val].readornot
+      if(!this.clicked){
       this.$refs.bgc[val].style.backgroundColor="#eee"
       }
       let bgc=this.$refs.bgc;
@@ -154,7 +161,8 @@ export default({
     },
     //鼠标离开背景颜色变浅，并实现小叉号的移出
     hideBgc(val){
-      console.log(this.clicked)
+      //console.log(unreadList[val].readornot)
+      this.clicked=this.unReadList[val].readornot
       if(this.clicked){
         this.$refs.bgc[val].style.backgroundColor="#eee"
       }else{
@@ -196,8 +204,13 @@ export default({
     },
     //点击小叉号删除列表内容
     del(val){
-        this.unReadList.splice(val,1)
-        //
+        // this.unReadList.splice(val,1)
+        // console.log(this.unReadList);
+        var index=null
+        index=this.unReadList.findIndex(item=>{
+          if(item.uuid===val) return true;
+        })
+        this.unReadList.splice(index,1)
     }
 
   }
