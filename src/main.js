@@ -7,7 +7,8 @@ import './assets/css/global.css'
 import axios from 'axios'
 import store from './store'
 
-
+import { Badge } from 'element-ui'
+Vue.use(Badge)
 
 /* axios.interceptors.request.use(config => {
 	config.headers.Authorization = wsindow.sessionStorage.getItem('token')
