@@ -102,10 +102,12 @@ li {
 .mainbox{
 		background: #FFFFFF;
 		padding: 35px;
+    padding-bottom: 50px;
 		border-radius: 10px;
 		margin: 15px;
 }
 .container{
+
   position: relative;
   margin: 0 auto;
   width: 1200px;
@@ -115,6 +117,7 @@ li {
 }
 .title {
 		text-align: center;
+    margin-bottom: 40px;
 	}
 
 .title h1 {

@@ -45,7 +45,7 @@
             <div class="jdd"></div>
             <span class="tri"></span>
             <div class="msg-header">
-              <div class="unread-title">未读消息</div>
+              <div class="unread-title">全部消息</div>
               <div class="unread-change">
                 <label for="msg-checkbox">
                   <input type="checkbox" id="msg-checkbox" v-model="checked">
@@ -62,7 +62,7 @@
                 <li v-for="(item,index) in unReadmsgList" :key="item.uuid" @click="sendIndex(index)" v-show="!item.readornot">
                   <router-link to="message">
                     <div class="msg-main-title" :title="item.messageinfo">来自{{item.id}}的消息: {{item.messageinfo}}</div>
-                    <div class="msg-main-time">{{item.sendtime}}</div>
+                    <div class="msg-main-time">{{new Date(item.sendtime).toLocaleString()}}</div>
                   </router-link>
                 </li>
               </ul>
@@ -340,7 +340,7 @@ a{
   top: 40%;
   left: 0px;
   transform: translateY(-50%);
-  width: 220px;
+  width: 252px;
   height: 48px;
   white-space: normal;
   line-height: 24px;
