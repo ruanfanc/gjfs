@@ -59,7 +59,7 @@ export default({
     change(val,len){
       this.num=val
       this.List[val].readornot=true
-      this.$http.put('http://denghuolanshan.top:8082/messagecommunication',{
+      this.$http.put('/api1/messagecommunication',{
             "messageinfo": `${this.List[val].messageinfo}`,
             "id": "user1",
             "icon": "usericon",
