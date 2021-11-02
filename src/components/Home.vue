@@ -111,6 +111,12 @@ export default {
 
     };
   },
+  watch:{
+    checked:function(oldValue,newValue){
+      console.log(oldValue,newValue);
+      this.msgList.every(item=>(item.readornot=true))
+    }
+  },
   created(){
     //	this.activePath = window.sessionStorage.getItem('activePath')
     this.response()  
@@ -151,8 +157,7 @@ export default {
         })
      },
     sendMsgList(){ 
-      this.$eventBus.$emit('shareMsgList',this.msgList) //eventBus实现兄弟组件之间数据共享，向message.vue发送接口收到的数据
-      this.$eventBus.$emit('shareUnMsgList',this.unReadmsgList)
+      this.$eventBus.$emit('shareMsgList',this.msgList)
      },
     sendIndex(val){
       this.$eventBus.$emit('shareIndex',val)//发送当前这条未读消息的索引
