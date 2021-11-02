@@ -15,6 +15,7 @@ import Checkout from '../components/Checkout.vue'
 import Case from '../components/task/Case.vue'
 import NoRight from '../components/noRight/noRight.vue'
 import First from '../components/firstpage/firstpage.vue'
+import Message from '../components/message/message.vue'
 import Test from '../components/firstpage/test.vue'
 Vue.use(VueRouter)
 
@@ -83,7 +84,11 @@ const routes = [
 			{
 				path:'/noRight',
 				component:NoRight
-			}
+			},
+			{
+				path: '/message',
+				component: Message
+			  }
 		]
 	}
 ]
