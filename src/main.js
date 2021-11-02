@@ -7,7 +7,8 @@ import './assets/css/global.css'
 import axios from 'axios'
 import store from './store'
 
-
+import { Badge } from 'element-ui'
+Vue.use(Badge)
 
 /* axios.interceptors.request.use(config => {
 	config.headers.Authorization = wsindow.sessionStorage.getItem('token')
@@ -15,12 +16,13 @@ import store from './store'
 }) */
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
+Vue.prototype.$eventBus = new Vue()
 
 //请求根路径
 //axios.defaults.baseURL = 'http://isihon.cn/sc'
 
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+    router,
+    store,
+    render: h => h(App)
 }).$mount('#app')
