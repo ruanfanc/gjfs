@@ -206,6 +206,10 @@
         <!-- 实时展示 -->
         <div class="clear"></div>
         <public id="#part3"> </public>
+
+        <div ></div>
+        <!-- <Progressview id="#part3-1"> </Progressview> -->
+        <progressview id="#part4"></progressview>
         <el-divider></el-divider>
       </div>
     </el-main>
@@ -290,6 +294,7 @@ import Public from "./publicity_show.vue";
 // import HomeSwiper from './swiper/HomeSwiper'
 import BackToTop from 'vue-backtotop';
 import ShowAll from "./test2.vue";
+import Progressview from "./Checkout_show.vue";
 
 export default {
   name: "firstpage",
@@ -320,26 +325,32 @@ export default {
         {
           name: "/first",
           navItem: "首页",
-          sstyle: "position: absolute;left: 69%;",
+          sstyle: "position: absolute;left: 60%;",
           posid: "#part0",
         },
         {
           name: "/task",
           navItem: "系统介绍",
-          sstyle: "position: absolute;left: 74%;",
+          sstyle: "position: absolute;left: 67%;",
           posid: "#part1",
         },
          {
           name: "/task",
           navItem: "系统框架",
-          sstyle: "position: absolute;left: 81%;",
+          sstyle: "position: absolute;left: 74%;",
           posid: "#part2",
         },
         {
-          name: "/test",
+          name: "/task",
           navItem: "实时公示",
-          sstyle: "position: absolute;left: 88%;",
+          sstyle: "position: absolute;left: 81%;",
           posid: "#part3",
+        },
+        {
+          name: "/task",
+          navItem: "案件进度",
+          sstyle: "position: absolute;left: 88%;",
+          posid: "#part4",
         },
 
         // {name: '/noright', navItem: '图书馆'},
@@ -411,7 +422,9 @@ export default {
     Public,
     BackToTop,
     'v-showall': ShowAll,
+    Progressview ,
      },
+
   methods:{
     jumpto(index){
       document.getElementById(index).scrollIntoView(true);
