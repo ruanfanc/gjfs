@@ -205,12 +205,20 @@
         </div>
         <!-- 实时展示 -->
         <div class="clear"></div>
-        <public id="#part3"> </public>
+        <!-- <public id="#part3"> </public> -->
 
         <div ></div>
         <!-- <Progressview id="#part3-1"> </Progressview> -->
         <progressview id="#part4"></progressview>
         <el-divider></el-divider>
+
+              <!-- <div>
+  				<el-steps :active="1" simple>
+  <el-step title="步骤 1" icon="el-icon-edit"></el-step>
+  <el-step title="步骤 2" icon="el-icon-upload"></el-step>
+  <el-step title="步骤 3" icon="el-icon-picture"></el-step>
+</el-steps>
+</div> -->
       </div>
     </el-main>
 

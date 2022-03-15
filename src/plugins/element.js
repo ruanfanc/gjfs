@@ -41,11 +41,15 @@ import {
   Divider,
   Upload,
   Tag,
+  Steps,
+  Step,
   DatePicker,
   Loading
 } from 'element-ui'
 
 Vue.use(Upload)
+Vue.use(Steps)
+Vue.use(Step)
 Vue.use(Tag)
 Vue.use(Divider)
 Vue.use(TimelineItem)
