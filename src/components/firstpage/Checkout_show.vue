@@ -21,10 +21,7 @@
               <el-form-item
                 label="案件id"
                 prop="caseId"
-                :rules="[
-                  { required: true, message: '案件id' },
-                  { type: 'number', message: '案件id必须为数字值' },
-                ]"
+                :rules="[{ required: true, message: '案件id' }]"
               >
                 <el-input
                   type="caseId"
@@ -38,26 +35,62 @@
 							</el-form-item> -->
               <el-form-item>
                 <!-- <el-button type="primary" @click="login">提交</el-button> -->
-                <el-button type="primary" @click="dialogTableVisible = true"
+                <el-button
+                  type="primary"
+                  @click="login(), (dialogTableVisible = true)"
                   >提交</el-button
                 >
-				<el-dialog :title="titleNode" :visible.sync="dialogTableVisible" >
-					<!-- <div class="steps"> -->
-	
-<!-- </div> -->
-    </el-dialog>
 
-
-                <el-dialog title="案件进度" :visible.sync="dialogTableVisible">
+                <el-dialog
+                  v-if="this.showdata.msg != '未查询到相关案件'"
+                  :title="showdata.caseName + '  ' + '案件进度'"
+                  :visible.sync="dialogTableVisible"
+                >
                   <!-- <div> -->
-					<el-card >
-			  					<el-steps :active="2"   align-center >
-                    <el-step title="公安局" icon="el-icon-edit"></el-step>
-                    <el-step title="检察院" icon="el-icon-upload"></el-step>
-                    <el-step title="法  院" icon="el-icon-picture"></el-step>
-                    <el-step title="司法局" icon="el-icon-picture"></el-step>
-                  </el-steps> 
-					</el-card>
+                  <el-card>
+                    <!-- <div>{{this.showdata.activeIndex}}</div> -->
+                    <el-steps :active="this.showdata.activeIndex" align-center>
+                      <!-- this.messa -->
+
+                      <!-- <el-step title="公安局" v-if="active === 1" icon="el-icon-edit"></el-step>
+                    <el-step title="检察院" v-if="active === 2" icon="el-icon-s-platform"></el-step>
+                    <el-step title="法  院" v-if="active === 3" icon="el-icon-picture"></el-step>
+                    <el-step title="司法局" v-if="active === 4" icon="el-icon-s-order" description="这是一段很长很长很长的描述性文字"></el-step> -->
+                      <el-step title="公安局" icon="el-icon-edit">
+                        <!-- <span v-if="active == 1">
+                          审核中
+                      </span> -->
+                      </el-step>
+                      <el-step title="检察院" icon="el-icon-s-platform">
+                        <!-- <span v-if="active == 2">
+                          审核中
+                      </span> -->
+                      </el-step>
+                      <el-step
+                        title="法  院"
+                        icon="el-icon-picture"
+                        :description="showdata.reasons"
+                      >
+                        <!-- <span v-if="active == 3">
+                          审核中
+                      </span> -->
+                      </el-step>
+                      <el-step title="司法局" icon="el-icon-s-order">
+                        <!-- <span v-if="active == 4">
+                          审核中
+                      </span>
+                      <template v-if="active == 4">
+                          审核中
+
+                      </template> -->
+                      </el-step>
+                    </el-steps>
+                    <el-row>
+                      <!-- <el-card >
+                      {{this.showdata.reasons}}
+                    </el-card> -->
+                    </el-row>
+                  </el-card>
 
                   <!-- </div> -->
                   <!-- <el-table :data="gridData">
@@ -84,9 +117,7 @@
                 </el-dialog>
                 <el-button @click="resetForm">重置</el-button>
               </el-form-item>
-
             </el-form>
-
           </div>
         </el-tab-pane>
         <!-- <el-tab-pane label="文书验证">
@@ -101,9 +132,7 @@
 				</el-tab-pane> -->
       </el-tabs>
     </div>
-
   </div>
-
 </template>
 
 <script>
@@ -112,8 +141,22 @@ export default {
     return {
       evidence: {
         caseId: "",
-        evidenceId: "",
       },
+      uploadKey: {
+        caseId: "",
+      },
+      showdata: {
+        code: "",
+        caseName: "",
+        part: "",
+        reason: "",
+        status: "",
+        time: "",
+        msg: "",
+        activeIndex: "",
+        caseStatus: "",
+      },
+
       rules: {
         caseId: [
           {
@@ -151,63 +194,83 @@ export default {
     };
   },
   methods: {
-    // submitForm() {
-    // 	this.$refs['evidenceref'].validate(valid => {
-    // 		if (!valid) return
-    // 		//
-    // 	});
-    // },
-    submitForm() {
-      this.$alert("<strong>这是 <i>HTML</i> 片段</strong>", "案件流程", {
-        dangerouslyUseHTMLString: true,
-      });
-    },
-    resetForm() {
-      this.$refs["evidenceref"].resetFields();
-    },
-    submitUpload() {
-      this.$refs.upload.submit();
-    },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePreview(file) {
-      console.log(file);
-    },
     login() {
+      var api_console = "http://localhost:8082/case-status/getCasesStatus/";
+      var obj1 = Object.create(null);
+      // var showdata=new this.showdata();
+      // this.uploadKey.caseId=
       this.$refs["evidenceref"].validate(async (valid) => {
         if (valid) {
-          alert("submit!");
+          // alert("submit!");
         } else {
-          console.log("error submit!!");
+          console.log(valid + "error submit!!");
           return false;
         }
         /* 配置请求路径，对接口 */
-        const { data: res } = await this.$http.post(
-          "/api1/login/logins",
-          this.loginForm
-        );
-        console.log(res, "www");
-        /* 配置状态码 */
-        if (res.code !== 0) return this.$message.error("");
-        this.$message.success("查询成功！");
-        //将返回的token保存到客户端的sessionStorage中
-        window.sessionStorage.setItem("name", res.data.data.staffName);
-        window.sessionStorage.setItem("id", res.data.data.id);
-        window.sessionStorage.setItem(
-          "departmentId",
-          res.data.data.departmentId
-        );
-        window.sessionStorage.setItem("token", res.data.token);
-        //window.sessionStorage.setItem("token",res.data.token);
-        //页面跳转
+        var myHeaders = new Headers();
+        myHeaders.append("User-Agent", "apifox/1.0.0 (https://www.apifox.cn)");
+        myHeaders.append("Content-Length", "");
+
+        var formdata = new FormData();
+        formdata.append("caseId", this.evidence.caseId);
+
+        var requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: formdata,
+          redirect: "follow",
+        };
+
+        fetch(api_console, requestOptions)
+          .then((response) => response.json())
+          .then((json) => {
+            console.log(json);
+            obj1 = json;
+            //  console.log(obj1);
+            this.getList(obj1);
+            this.$message.success(this.showdata.msg);
+            console.log(this.showdata.msg);
+          })
+          .catch((err) => {
+            console.log("Request Failed", err);
+            setTimeout(() => {
+              this.showdata.code = Object.code;
+              this.showdata.msg = Object.msg;
+            }, 1000);
+            this.$message.false(this.showdata.msg);
+            console.log(this.showdata.msg);
+          });
       });
     },
-    getList() {
+    getList(Object) {
       // 模拟数据获取
-      setTimeout(() => {
-        this.tableData = tableData;
-      }, 1000);
+      // console.log(Object.code);
+        if (Object.data != null) {
+          this.showdata.code = Object.code;
+          this.showdata.caseName = Object.data.caseName;
+          this.showdata.part = Object.data.part;
+          this.showdata.reason = Object.data.reason;
+          this.showdata.status = Object.data.status;
+          this.showdata.time = Object.data.time;
+          this.showdata.msg = Object.msg;
+          // this.showdata.caseStatus=Object.data;
+          this.showdata.activeIndex = Object.data.status - 100;
+          // console.log(Object.data.status - 100);
+          // dialogTableVisible = true;
+        } else {
+          this.showdata.code = Object.code;
+          this.showdata.caseName = "";
+          this.showdata.part = "";
+          this.showdata.reason = "";
+          this.showdata.status = "";
+          this.showdata.time = "";
+          this.showdata.msg = Object.msg;
+          this.showdata.activeIndex = 0;
+          this.dialogTableVisible = false;
+          // this.showdata.caseStatus=Object.data;
+        }
+
+        // this.tableData = tableData;
     },
   },
 };
@@ -251,9 +314,8 @@ export default {
 .formbox {
   padding: 20px;
 }
-.steps{
-	width: 120px;
-	height: 120px;
-
+.steps {
+  width: 120px;
+  height: 120px;
 }
 </style>
