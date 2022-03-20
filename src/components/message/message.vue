@@ -6,9 +6,8 @@
 			<p>打造使用复杂度低、安全可信度高、办案作用力大的公检法司联盟区块链</p>
 	</div>
   <div class="container">
-     <div class="header">
-      <div class="unread">未读消息</div>
-      
+    <div class="header">
+      <div class="unread">未读消息</div> 
     </div>
     <div class="middle-unread">
         <div class="aside">
@@ -21,7 +20,7 @@
           </ul>
         </div>
         <div class="main">
-          <div class="content">{{List[num].messageinfo}}</div>
+          <div class="content">{{messageinfo}}</div>
         </div>
     </div>
   </div>
@@ -30,8 +29,7 @@
 </template>
 
 <script>
-
-export default({
+export default{
   data(){
     return{
       List: [],
@@ -41,10 +39,14 @@ export default({
       isShowdot:true
     } 
   },
+  computed:{
+    messageinfo() {
+      return this.List.length==0?'':this.List[this.num].messageinfo
+    }
+  },
   created(){    
     this.$eventBus.$on('shareMsgList',(val)=>{    //eventBus实现兄弟组件之间数据共享          
       this.List = val
-      console.log(this.List,'未读');
     }),
     this.$eventBus.$on('shareIndex',(val)=>{
       this.num=val;
@@ -56,10 +58,10 @@ export default({
     })
   },
   methods:{
-    change(val,len){
+    async change(val,len){
       this.num=val
       this.List[val].readornot=true
-      this.$http.put('/api1/messagecommunication',{
+      await this.$http.put('/api1/messagecommunication/string',{
             "messageinfo": `${this.List[val].messageinfo}`,
             "id": "user1",
             "icon": "usericon",
@@ -75,7 +77,7 @@ export default({
       console.log(this.List[val].readornot);
     }
   }
-})
+}
 </script>
 
 <style lang="less" scoped>
