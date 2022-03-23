@@ -137,6 +137,17 @@
       width="80%"
       fullscreen
     >
+      <div class="searchEvidence-container">
+        <el-input
+        v-model="searchEviKey"
+        placeholder="请输入证物描述关键词"
+        style="width: 250px"
+        class="filter-item"
+      />
+      <el-button class="filter-item" type="primary" icon="el-icon-search">
+        搜索
+      </el-button>
+      </div>
       <span>
         <el-table :data="evidence" stripe style="width: 100%">
           <el-table-column prop="evidenceId" label="存证编号"></el-table-column>
@@ -516,7 +527,8 @@ export default {
   //inject: ['reload'],
   data() {
     return {
-      searchKey: "",
+      searchKey: "", //搜索案件关键词
+      searchEviKey: "", //搜索证据关键词
       fileUrl: "",
       pageSize: 10, //每页多少条
       currentPage: 1, // 当前页
@@ -625,12 +637,20 @@ export default {
     searchKey(value, oldValue) {
       if (value) {
         this.nocheck = this.nocheck.filter((item) => {
-          return item.caseDecription.includes(value);
+          return item.caseDecription.includes(value) || item.caseId.includes(value) || item.caseName.includes(value)
         });
       } else {
         this.noCheck();
       }
     },
+    searchEviKey(newValue, oldValue) {
+      if(newValue) {
+        this.evidence = this.evidence.filter(item => {
+          return item.note.includes(newValue) || item.evidenceId.includes(newValue)
+        })
+      }
+      console.log(newValue,oldValue)
+    }
   },
   created() {
     this.noCheck();
@@ -980,6 +1000,9 @@ export default {
 
 <style>
 .filter-container {
+  padding-bottom: 30px;
+}
+.searchEvidence-container {
   padding-bottom: 30px;
 }
 .imgbox {

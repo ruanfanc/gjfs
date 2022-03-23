@@ -34,7 +34,7 @@
           <span slot="title">实时公示</span>
         </el-menu-item>
         <!-- 消息模块 -->
-        <el-menu-item @mouseenter.native="enter" @mouseleave.native="leave">
+        <el-menu-item @mouseenter.native="enter" @mouseleave.native="leave" @click.native="jumpToMessage">
           <template slot="title">
             <i class="el-icon-bell"></i>
             <span slot="" class="mesTitle">消息</span>
@@ -146,9 +146,12 @@ export default {
     leave(){
       this.isShow=false;
     },
+    jumpToMessage(){
+      this.$router.push('/message')
+    },
     async response() {
         var that = this;
-        await this.$http.get('http://denghuolanshan.top:8082/messagecommunication/user1')
+        await this.$http.get('/api1/messagecommunication/string')
         .then(function(response) {       
           that.msgList = response.data.data
           that.unReadmsgList=that.msgList.filter((item) => item.readornot == false)
@@ -161,7 +164,7 @@ export default {
      },
     sendIndex(val){
       this.$eventBus.$emit('shareIndex',val)//发送当前这条未读消息的索引
-      this.$http.put('http://denghuolanshan.top:8082/messagecommunication',{
+      this.$http.put('/api1/messagecommunication/string',{
             "messageinfo": `${this.unReadmsgList[val].messageinfo}`,
             "id": "user1",
             "icon": "usericon",
