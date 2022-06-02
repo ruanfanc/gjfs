@@ -360,10 +360,6 @@ export default {
           sstyle: "position: absolute;left: 88%;",
           posid: "#part4",
         },
-
-        // {name: '/noright', navItem: '图书馆'},
-        // {name: '/welcom', navItem: '个人中心'}
-        // ]
       ],
       login: [{ name: "/login", ItemName: "登录" }],
 

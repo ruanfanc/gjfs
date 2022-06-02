@@ -13,84 +13,78 @@ import Leader from '../components/task/Leader.vue'
 import Publicity from '../components/Publicity.vue'
 import Checkout from '../components/Checkout.vue'
 import Case from '../components/task/Case.vue'
-import NoRight from '../components/noRight/noRight.vue'
 import First from '../components/firstpage/firstpage.vue'
 import Message from '../components/message/message.vue'
 import Test from '../components/firstpage/test.vue'
 Vue.use(VueRouter)
 
-const routes = [
-	{
-		path: '/',
-		redirect: '/first'
-	},
-	{
-		path: '/first',
-			component: First
-		},
-		// {
-		// 	path: '/test',
-		// 	component: Test
-		// },
-	{
-	path: '/login',
-		component: Login
-	},
+const routes = [{
+    path: '/',
+    redirect: '/first'
+  },
+  {
+    path: '/first',
+    component: First
+  },
+  // {
+  // 	path: '/test',
+  // 	component: Test
+  // },
+  {
+    path: '/login',
+    component: Login
+  },
 
-	{
-		path: '/home',
-		component: Home,
-		redirect: '/welcome',
-		children: [{
-				path: '/welcome',
-				component: Welcome
-			},
-			{
-				path: '/work',
-				component: Work
-			},
-			{
-				path: '/reporter',
-				component: Reporter
-			},
-			{
-				path: '/people',
-				component: People
-			},
-			{
-				path: '/captain',
-				component: Captain
-			},
-			{
-				path: '/bigcaptain',
-				component: BigCaptain
-			},
-			{
-				path: '/leader',
-				component: Leader
-			},
-			{
-				path: '/publicity',
-				component: Publicity
-			},
-			{
-				path: '/checkout',
-				component: Checkout
-			},
-			{
-				path: '/case',
-				component: Case
-			},
-			{
-				path:'/noRight',
-				component:NoRight
-			},
-			{
-				path: '/message',
-				component: Message
-			  }
-		]
-	}
+  {
+    path: '/home',
+    component: Home,
+    redirect: '/welcome',
+    children: [{
+        path: '/welcome',
+        component: Welcome
+      },
+      {
+        path: '/work',
+        component: Work
+      },
+      {
+        path: '/reporter',
+        component: Reporter
+      },
+      {
+        path: '/people',
+        component: People
+      },
+      {
+        path: '/captain',
+        component: Captain
+      },
+      {
+        path: '/bigcaptain',
+        component: BigCaptain
+      },
+      {
+        path: '/leader',
+        component: Leader
+      },
+      {
+        path: '/publicity',
+        component: Publicity
+      },
+      {
+        path: '/checkout',
+        component: Checkout
+      },
+      {
+        path: '/case',
+        component: Case
+      },
+      {
+        path: '/message',
+        component: Message
+      }
+    ]
+  }
 ]
 
 const router = new VueRouter({

@@ -40,7 +40,7 @@ productionSourceMap: false,
             },
 			'/api2': {
 			    // 文件系统服务器172.18.72.195
-			    target: 'http://39.108.142.174:8082/',
+			    target: 'http://47.106.116.110:8084/',
 			    // 允许跨域
 			    changeOrigin: true,
 			    ws: true,
