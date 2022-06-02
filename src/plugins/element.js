@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import {
+  Badge,
   Button,
   Form,
   FormItem,
@@ -89,6 +90,7 @@ Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Pagination)
 Vue.use(DatePicker)
+Vue.use(Badge)
 
 Vue.prototype.$message = Message
 Vue.prototype.$msgbox = MessageBox
