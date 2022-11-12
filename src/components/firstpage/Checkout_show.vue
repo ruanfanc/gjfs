@@ -35,11 +35,7 @@
 							</el-form-item> -->
               <el-form-item>
                 <!-- <el-button type="primary" @click="login">提交</el-button> -->
-                <el-button
-                  type="primary"
-                  @click="login(), (dialogTableVisible = true)"
-                  >提交</el-button
-                >
+                <el-button type="primary" @click="login()">提交</el-button>
 
                 <el-dialog
                   v-if="this.showdata.msg != '未查询到相关案件'"
@@ -195,7 +191,8 @@ export default {
   },
   methods: {
     login() {
-      var api_console = "http://localhost:8082/case-status/getCasesStatus/";
+      var api_console =
+        "http://152.136.254.142:8082/case-status/getCasesStatus/";
       var obj1 = Object.create(null);
       // var showdata=new this.showdata();
       // this.uploadKey.caseId=
@@ -203,7 +200,6 @@ export default {
         if (valid) {
           // alert("submit!");
         } else {
-          console.log(valid + "error submit!!");
           return false;
         }
         /* 配置请求路径，对接口 */
@@ -224,12 +220,12 @@ export default {
         fetch(api_console, requestOptions)
           .then((response) => response.json())
           .then((json) => {
-            console.log(json);
-            obj1 = json;
-            //  console.log(obj1);
-            this.getList(obj1);
-            this.$message.success(this.showdata.msg);
-            console.log(this.showdata.msg);
+            if (json.code == 0) {
+              this.dialogTableVisible = true;
+              this.$message.success(json.msg);
+            } else {
+              this.getList(obj1);
+            }
           })
           .catch((err) => {
             console.log("Request Failed", err);
@@ -245,32 +241,21 @@ export default {
     getList(Object) {
       // 模拟数据获取
       // console.log(Object.code);
-        if (Object.data != null) {
-          this.showdata.code = Object.code;
-          this.showdata.caseName = Object.data.caseName;
-          this.showdata.part = Object.data.part;
-          this.showdata.reason = Object.data.reason;
-          this.showdata.status = Object.data.status;
-          this.showdata.time = Object.data.time;
-          this.showdata.msg = Object.msg;
-          // this.showdata.caseStatus=Object.data;
-          this.showdata.activeIndex = Object.data.status - 100;
-          // console.log(Object.data.status - 100);
-          // dialogTableVisible = true;
-        } else {
-          this.showdata.code = Object.code;
-          this.showdata.caseName = "";
-          this.showdata.part = "";
-          this.showdata.reason = "";
-          this.showdata.status = "";
-          this.showdata.time = "";
-          this.showdata.msg = Object.msg;
-          this.showdata.activeIndex = 0;
-          this.dialogTableVisible = false;
-          // this.showdata.caseStatus=Object.data;
-        }
+      if (Object.data != null) {
+        this.showdata = { ...Object, activeIndex: Object.data.status - 100 };
+      } else {
+        this.showdata.code = Object.code;
+        this.showdata.caseName = "";
+        this.showdata.part = "";
+        this.showdata.reason = "";
+        this.showdata.status = "";
+        this.showdata.time = "";
+        this.showdata.msg = Object.msg;
+        this.showdata.activeIndex = 0;
+        this.dialogTableVisible = false;
+      }
 
-        // this.tableData = tableData;
+      // this.tableData = tableData;
     },
   },
 };

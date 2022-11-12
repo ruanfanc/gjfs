@@ -406,8 +406,7 @@
 </script>
 <style scoped>
 	.filter-container {
-		padding-bottom: 10px;
-
+		padding-bottom: 10px; 
 		.filter-item {
 			display: inline-block;
 			vertical-align: middle;

@@ -1,7 +1,6 @@
 <template>
   <div class="mainset">
     <el-row  class="boxcard" style="height:50px; padding:30px; padding-top:15px">
-     
       <el-col :lg="4">
         姓名：{{information.name}}
       </el-col>

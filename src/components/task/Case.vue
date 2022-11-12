@@ -37,9 +37,8 @@
         nocheck.slice((currentPage - 1) * pageSize, currentPage * pageSize)
       "
       @selection-change="handleSelectionChange"
-      
     >
-        <!-- <el-table
+      <!-- <el-table
       highlight-current-row
       :data="
         nocheck.slice((currentPage - 1) * pageSize, currentPage * pageSize)
@@ -47,10 +46,15 @@
       stripe
       style="width: 100%"
     > -->
-    <!-- handleSelectionChange(val) {
+      <!-- handleSelectionChange(val) {
       this.multipleSelection = val;
     }, -->
-      <el-table-column prop="哈哈哈" type="selection" label="全选按钮"  width="53"/>
+      <el-table-column
+        prop="哈哈哈"
+        type="selection"
+        label="全选按钮"
+        width="53"
+      />
       <!-- <el-table-column label="全选" type="selection" align="center" width="58"> -->
       <el-table-column prop="caseId" label="案件编号"></el-table-column>
       <el-table-column prop="caseName" label="案件名称"></el-table-column>
@@ -139,14 +143,14 @@
     >
       <div class="searchEvidence-container">
         <el-input
-        v-model="searchEviKey"
-        placeholder="请输入证物描述关键词"
-        style="width: 250px"
-        class="filter-item"
-      />
-      <el-button class="filter-item" type="primary" icon="el-icon-search">
-        搜索
-      </el-button>
+          v-model="searchEviKey"
+          placeholder="请输入证物描述关键词"
+          style="width: 250px"
+          class="filter-item"
+        />
+        <el-button class="filter-item" type="primary" icon="el-icon-search">
+          搜索
+        </el-button>
       </div>
       <span>
         <el-table :data="evidence" stripe style="width: 100%">
@@ -157,11 +161,10 @@
               <el-tag type="info" v-if="!row.examine">未审核</el-tag>
               <el-tag
                 v-else-if="
-                  row.examine ==
-                  ('法院审核通过' ||
-                    '检察院审核通过' ||
-                    '司法局审核通过' ||
-                    '公安部门审核通过')
+                  row.examine == '法院审核通过' ||
+                  row.examine == '检察院审核通过' ||
+                  row.examine == '司法局审核通过' ||
+                  row.examine == '公安部门审核通过'
                 "
                 type="success"
                 >{{ row.examine }}</el-tag
@@ -225,11 +228,12 @@
         />
       </div>
       <div class="textbox">
-        <i class="el-icon-success" style="color: green; margin-right:5px"></i>
+        <i class="el-icon-success" style="color: green; margin-right: 5px"></i>
         区块链校验通过 <a :href="objectUrl" :download="fileName"> 点击下载</a>
       </div>
-      <div class="textbox">区块HASH：{{blockHash}}</div>
+      <div class="textbox">区块HASH：{{ blockHash }}</div>
     </el-dialog>
+
     <!-- 未通过批复弹窗 dialogVisibleNoPass-->
     <el-dialog :visible.sync="dialogVisibleNoPass" width="80%">
       <el-form :model="noPassForm" size="medium" label-width="100px">
@@ -503,12 +507,10 @@
         >
           <i class="el-icon-upload"></i>
           <div class="el-upload__text">
-            将文件拖到此处，或 &nbsp;<el-button
-              slot="trigger"
-              size="small"
-              type="primary"
-              >选取文件</el-button
-            >
+            将文件拖到此处，或 &nbsp;
+            <el-button slot="trigger" size="small" type="primary"
+              >选取文件
+            </el-button>
           </div>
         </el-upload>
         <el-button
@@ -548,7 +550,6 @@ export default {
       fullscreenLoading: false,
       activeName: "first",
       nocheck: [],
-
       evidence: [],
       noPassForm: {},
       dialogVisible1: false,
@@ -631,33 +632,37 @@ export default {
       bolckHash: "",
       objectUrl: "",
       fileName: "",
+      multipleSelection: [],
     };
   },
   watch: {
     searchKey(value, oldValue) {
       if (value) {
         this.nocheck = this.nocheck.filter((item) => {
-          return item.caseDecription.includes(value) || item.caseId.includes(value) || item.caseName.includes(value)
+          return (
+            item.caseDecription.includes(value) ||
+            item.caseId.includes(value) ||
+            item.caseName.includes(value)
+          );
         });
       } else {
         this.noCheck();
       }
     },
     searchEviKey(newValue, oldValue) {
-      if(newValue) {
-        this.evidence = this.evidence.filter(item => {
-          return item.note.includes(newValue) || item.evidenceId.includes(newValue)
-        })
+      if (newValue) {
+        this.evidence = this.evidence.filter((item) => {
+          return (
+            item.note.includes(newValue) || item.evidenceId.includes(newValue)
+          );
+        });
       }
-      console.log(newValue,oldValue)
-    }
+      console.log(newValue, oldValue);
+    },
   },
   created() {
     this.noCheck();
     this.departmentId = window.sessionStorage.getItem("departmentId");
-    console.log("this.departmentId :>> ", this.departmentId);
-    this.evidenceLoading = true;
-    this.fetchData();
   },
   methods: {
     //   获取全部案件
@@ -728,6 +733,7 @@ export default {
       );
       this.creatCaseDia = false;
       if (res.code == 0) {
+        this.noCheck();
         return this.$message.success("创建成功！");
       }
       return this.$message.error("操作失败！");
@@ -764,39 +770,33 @@ export default {
         });
       });
     },
-    // 选择的导出
-    fetchData() {
-      this.listLoading = true;
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items;
-        this.listLoading = false;
-      });
-    },
+
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
     handleDownload() {
       if (this.multipleSelection.length) {
         this.downloadLoading = true;
-        import("../../vendor/Export2Excel").then(excel => {
+        import("../../vendor/Export2Excel").then((excel) => {
+          console.log(1);
           const tHeader = [
-          "案件编号",
-          "案件名称",
-          "案情描述",
-          "创建时间",
-          "案件类型",
-          "重要程度",
-          "负责人",
-        ];
-        const filterVal = [
-          "caseId",
-          "caseName",
-          "caseDecription",
-          "time",
-          "caseTypeId",
-          "importace",
-          "staffId",
-        ];
+            "案件编号",
+            "案件名称",
+            "案情描述",
+            "创建时间",
+            "案件类型",
+            "重要程度",
+            "负责人",
+          ];
+          const filterVal = [
+            "caseId",
+            "caseName",
+            "caseDecription",
+            "time",
+            "caseTypeId",
+            "importace",
+            "staffId",
+          ];
           const list = this.multipleSelection;
           const data = this.formatJson(filterVal, list);
           excel.export_json_to_excel({
@@ -810,7 +810,7 @@ export default {
       } else {
         this.$message({
           message: "请最少选择一个案件",
-          type: "warning"
+          type: "warning",
         });
       }
     },
@@ -864,11 +864,10 @@ export default {
 
     /* 查看证据详情弹窗 */
     async lookevidenceinfo(id) {
-      console.log(id);
-
       // this.dialogVisible1 = false;
-      
+
       const { data: res } = await this.$http.get("/api1/evidence/getone/" + id);
+      console.log(res);
       if (res.code === 1001) {
         return this.$message.error("证据被篡改," + res.msg + ",请联系管理员!");
       } else if (res.code === 0) {
@@ -928,7 +927,7 @@ export default {
         this.$message.warning("请选取文件");
         return;
       }
-      console.log('this.evidenceData :>> ', this.evidenceData);
+      console.log("this.evidenceData :>> ", this.evidenceData);
       await this.$http
         .post("/api1/evidence/postevidence", this.evidenceData)
         .then((res) => {
@@ -970,6 +969,7 @@ export default {
     // },
     // 证据文件上传前数据绑定
     handleChange(file, fileList) {
+      console.log(file);
       this.fileList = fileList.slice(-1);
     },
     handelSuccess(response) {
@@ -1039,5 +1039,4 @@ export default {
   /* margin-bottom: 2px; */
   /* font-weight: bold; */
 }
-
 </style>
